@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import CustomUser
 
@@ -44,3 +45,27 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             birth_date=validated_data.get('birth_date')
         )
         return user
+class ActivationCodeSerializer(serializers.Serializer):
+    activation_code = serializers.CharField(max_length=6)
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(style={'input_type': 'password'})
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        user = authenticate(email=email, password=password)
+        if user is None:
+            raise serializers.ValidationError("Неверный логин или пароль.")
+        return {'user': user}
+
+class RegistrationMessageSerializer(serializers.Serializer):
+    message = serializers.CharField()
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordVerifySerializer(serializers.Serializer):
+    reset_code = serializers.CharField(max_length=100)

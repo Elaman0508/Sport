@@ -6,7 +6,7 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
  # Убедитесь, что у вас есть этот класс
 
-    list_display = ('email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'is_active', 'is_staff')
+    list_display = ('email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'activation_code', 'reset_code', 'is_active', 'is_staff')
     list_filter = ('is_active', 'is_staff')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

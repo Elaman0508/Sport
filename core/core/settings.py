@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'super_admin',
     'rest_framework',
+    'rest_framework.authtoken',
     'drf_yasg',
     'user',
 ]
@@ -131,9 +132,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Укажите вашу кастомную модель пользователя
 AUTH_USER_MODEL = 'user.CustomUser'
-# ONE_C_REG = "https://example.com/api/register"  # Убедитесь, что этот URL правильный
+# ONE_C_REG = 'https://example.com/one-c-registration'  # Замените на реальный URL
+# ONE_C = 'Bearer your_auth_token'  # Замените на реальный токен
+#
+#  # Убедитесь, что этот URL правильный
+#
+# # settings.py
+# NIKITA_LOGIN = '12345'
+# NIKITA_PASSWORD = 'e61_PO4a'
+# NIKITA_SENDER = 'SMSPRO.KG'
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kamiltaalaibekkyzy@gmail.com'
+EMAIL_HOST_PASSWORD = 'nskpxwpqtawdtvnw'
 # settings.py
-NIKITA_LOGIN = '12345'
-NIKITA_PASSWORD = 'e61_PO4a'
-NIKITA_SENDER = 'SMSPRO.KG'
+BASE_URL = 'http://127.0.0.1:8000/admin/'
