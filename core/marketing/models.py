@@ -20,3 +20,28 @@ class Advertisement(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Tariff(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    duration_days = models.IntegerField()  # Количество дней действия тарифа
+
+    def __str__(self):
+        return self.name
+
+
+class Payment(models.Model):
+    card_holder_name = models.CharField(max_length=100)
+    card_number = models.CharField(max_length=16)
+    expiry_date = models.CharField(max_length=5)
+    cvc = models.CharField(max_length=4)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.card_holder_name
+
+
+class Savephoto(models.Model):
+    file = models.FileField(upload_to='uploads/')
