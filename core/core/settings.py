@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'marketing',
     'drf_yasg',
+    'bilimkana',
 ]
 
 MEDIA_URL = '/media/'
