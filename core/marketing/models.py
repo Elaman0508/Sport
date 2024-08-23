@@ -17,6 +17,7 @@ class Advertisement(models.Model):
     website_name = models.CharField(max_length=255, blank=True, null=True)
     website_link = models.URLField(max_length=255, blank=True, null=True)
     tariffs = models.TextField(blank=True, null=True)
+    duration = models.IntegerField(db_default=7)
 
     def __str__(self):
         return self.title
