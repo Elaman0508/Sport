@@ -33,15 +33,13 @@ class Tariff(models.Model):
 
 
 class Payment(models.Model):
-    card_holder_name = models.CharField(max_length=100)
-    card_number = models.CharField(max_length=16)
-    expiry_date = models.CharField(max_length=5)
-    cvc = models.CharField(max_length=4)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+    card_holder_name = models.CharField(max_length=255, default='Unknown')
+    card_number = models.CharField(max_length=16, default='0000000000000000')
+    expiry_date = models.CharField(max_length=5, default='00/00')  # Формат MM/YY
+    cvc = models.CharField(max_length=3, default='000')
 
     def __str__(self):
-        return self.card_holder_name
+        return f"Payment {self.card_holder_name} - {self.card_number}"
 
 
 class Savephoto(models.Model):

@@ -25,4 +25,4 @@ class TariffSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ['id', 'card_holder_name', 'card_number', 'expiry_date', 'cvc', 'amount', 'created_at']
+        fields = ['card_holder_name', 'card_number', 'expiry_date', 'cvc']
