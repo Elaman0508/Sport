@@ -28,13 +28,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     # 'super_admin',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
     'user',
     'corsheaders',
+    #apps
+    'bilimkana',
+    'marketing',
+    'main',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +76,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+
+
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51Ps1IcKVaMgv7sI2ZURWU7rW2r56h7h8afp26AVBis7KAUk7YPdosHUwBwdKqSgSg1t3Kd2U2pV4BA6s8ducs2Ey00H3WqY3Pu'
+STRIPE_SECRET_KEY = 'sk_test_51Ps1IcKVaMgv7sI2c7NPQmbbJuZTdEp3akB14GZ6TuToURlTsI0aeKmX6GcPr70ACIwsYxR3psipEnt16AK1gD6s006x45h1br'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
