@@ -38,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'super_admin',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
     'user',
-    'football'
+    'football',
+    'user_admin',
+    'volleyball',
 ]
 
 MIDDLEWARE = [

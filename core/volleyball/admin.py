@@ -1,7 +1,5 @@
 from django.contrib import admin
 from .models import Hall, Review, HallImage, CircleImage, Circle, TrainingSchedule
-
-
 class HallImageInline(admin.TabularInline):
     model = HallImage
     extra = 1  # Количество дополнительных пустых форм

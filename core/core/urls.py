@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/',include('user.urls')),
     path('football/', include('football.urls')),
+    path('user_admin/',include('user_admin.urls')),
+    path('volleyball/',include('volleyball.urls')),
 ]
 urlpatterns += yasg_urls
 if settings.DEBUG:
