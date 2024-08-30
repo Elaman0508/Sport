@@ -21,3 +21,17 @@ class SportClass(models.Model):
 
     def __str__(self):
         return f"{self.sport_type} - {self.class_name}"
+
+
+class GymInfo(models.Model):
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    description = models.TextField()
+    instagram = models.URLField(blank=True, null=True)
+    installment_options = models.CharField(max_length=100)  # "6/9/12 месяцев"
+
+    # и любые другие поля, которые вам нужны
+
+    def __str__(self):
+        return self.name

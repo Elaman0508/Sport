@@ -1,4 +1,26 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class BasketballClass(models.Model):
+    name = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    is_free_for_new_users = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Registration(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    basketball_class = models.ForeignKey(BasketballClass, on_delete=models.CASCADE)
+    is_free = models.BooleanField(default=False)
+    registration_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.basketball_class.name}'
 
 
 class Arena(models.Model):

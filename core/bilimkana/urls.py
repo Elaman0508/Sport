@@ -9,6 +9,7 @@ router.register(r'reviews', ReviewViewSet, basename='reviews')
 router.register(r'trainers', TrainerViewSet)
 router.register(r'class-schedule', ClassScheduleViewSet)
 router.register(r'club-info', ClubInfoViewSet)
+router.register(r'registrations', RegistrationViewSet, basename='registrations')
 
 
 urlpatterns = [

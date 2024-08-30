@@ -4,6 +4,11 @@ from .models import *
 from .serializers import *
 
 
+class RegistrationViewSet(viewsets.ModelViewSet):
+    queryset = Registration.objects.all()
+    serializer_class = RegistrationSerializer
+
+
 class ArenaViewSet(viewsets.ModelViewSet):
     queryset = Arena.objects.all()
     serializer_class = ArenaSerializer

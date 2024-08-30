@@ -1,5 +1,5 @@
 from rest_framework import generics
-from .models import SportClass
+from .models import *
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -14,3 +14,11 @@ class SportClassListCreateView(generics.ListCreateAPIView):
 class SportClassRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = SportClass.objects.all()
     serializer_class = SportClassSerializer
+
+
+class GymInfoView(generics.RetrieveAPIView):
+    queryset = GymInfo.objects.all()
+    serializer_class = GymInfoSerializer
+
+    def get_object(self):
+        return GymInfo.objects.first()
