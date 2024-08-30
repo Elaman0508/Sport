@@ -2,7 +2,7 @@ from rest_framework import generics, filters
 from .models import Hall, Review, Circle, TrainingSchedule
 from .serializers import HallSerializer, ReviewSerializer, CircleSerializer, TrainingScheduleSerializer
 
-class HallListView(generics.ListAPIView):
+class HallListView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
 
@@ -34,7 +34,7 @@ class ReviewDetailView(generics.RetrieveAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-class CircleListView(generics.ListAPIView):
+class CircleListView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
 

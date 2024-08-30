@@ -41,8 +41,8 @@ class CircleImageInline(admin.TabularInline):
     model = CircleImage
     extra = 1
 
-@admin.register(Circle)
 class CircleAdmin(admin.ModelAdmin):
+    inlines = [CircleImageInline]
     list_display = ['title', 'phone', 'address', 'sports']
     search_fields = ['title', 'phone', 'address']
     fieldsets = (
@@ -54,8 +54,7 @@ class CircleAdmin(admin.ModelAdmin):
             'header4', 'description4'
         )}),
     )
-    inlines = [CircleImageInline]
+admin.site.register(Circle, CircleAdmin)
 
-@admin.register(CircleImage)
 class CircleImageAdmin(admin.ModelAdmin):
     list_display = ['id', 'image']
