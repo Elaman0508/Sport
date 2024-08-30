@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'football',
     'user_admin',
     'volleyball',
+    'about_admin',
 ]
 
 MIDDLEWARE = [

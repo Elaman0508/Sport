@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Hall, Review, HallImage, CircleImage, Circle, TrainingSchedule
 
-
 class HallImageInline(admin.TabularInline):
     model = HallImage
     extra = 1  # Количество дополнительных пустых форм
@@ -23,6 +22,7 @@ class HallImageAdmin(admin.ModelAdmin):
 
 admin.site.register(Hall, HallAdmin)
 admin.site.register(Review, ReviewAdmin)
+
 class CircleImageInline(admin.TabularInline):
     model = CircleImage
     extra = 1  # Количество пустых форм для добавления изображений

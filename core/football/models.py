@@ -11,9 +11,13 @@ class Hall(models.Model):
     covering = models.CharField(max_length=100, verbose_name='Покрытие')
     inventory = models.TextField(verbose_name='Инвентарь')
     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Оплата за час')
-    title1 = models.CharField(max_length=255, verbose_name='Название')
+    dressing_room = models.BooleanField(verbose_name='Раздевалка', default=False)
+    lighting = models.BooleanField(verbose_name='Освещение', default=False)
+    shower = models.BooleanField(verbose_name='Душевая', default=False)
+    title1 = models.CharField(max_length=255, verbose_name='Дополнительное название')
     address = models.CharField(max_length=255, verbose_name='Адрес')
     phone = models.CharField(max_length=20, verbose_name='Телефон')
+
 
     def __str__(self):
         return self.title
@@ -21,6 +25,7 @@ class Hall(models.Model):
     class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
+
 
 class Review(models.Model):
     user_name = models.CharField(max_length=255, verbose_name='Имя пользователя')
@@ -33,38 +38,37 @@ class Review(models.Model):
         verbose_name_plural = 'Отзывы'
         ordering = ['-created_at']
 
+
 class HallImage(models.Model):
     hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
     image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
 
     def __str__(self):
-        return f'Изображение зала {self.hall}'
+        return f'Изображение зала {self.hall.title}'
 
     class Meta:
         verbose_name = 'Изображение зала'
         verbose_name_plural = 'Изображения залов'
+
+
 class Circle(models.Model):
-    # Основные поля
     title = models.CharField(max_length=255, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='circle_images/', verbose_name='Изображение', blank=True, null=True)
-
-    # Дополнительные поля
     title1 = models.CharField(max_length=255, verbose_name='Дополнительное название')
     text = models.TextField(verbose_name='Текст')
     description1 = models.TextField(verbose_name='Дополнительное описание')
     video_link = models.URLField(max_length=500, verbose_name='Ссылка на видео', blank=True, null=True)
-
     text1 = models.TextField(verbose_name='Дополнительный текст', blank=True, null=True)
     description2 = models.TextField(verbose_name='Дополнительное описание', blank=True, null=True)
-
     address = models.CharField(max_length=255, verbose_name='Адрес', blank=True, null=True)
     phone = models.CharField(max_length=20, verbose_name='Телефон', blank=True, null=True)
 
     def __str__(self):
         return self.title
+
     class Meta:
-        verbose_name = 'Кружки'
+        verbose_name = 'Кружок'
         verbose_name_plural = 'Кружки'
 
 
