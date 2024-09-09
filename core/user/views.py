@@ -138,8 +138,8 @@ class ActivationAPIView(generics.GenericAPIView):
         try:
             user = get_object_or_404(CustomUser, activation_code=activation_code)
 
-            # Проверка срока действия кода
-            if user.activation_code_created_at and timezone.now() > user.activation_code_created_at + timedelta(minutes=5):
+            # Проверка срока действия кода (1 час)
+            if user.activation_code_created_at and timezone.now() > user.activation_code_created_at + timedelta(hours=1):
                 return Response({
                     'response': False,
                     'message': 'Срок действия кода активации истек.'
