@@ -1,6 +1,8 @@
 import random
 import string
 import re
+from django.utils import timezone
+from datetime import timedelta
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework import generics, status
@@ -127,27 +129,39 @@ class ActivationAPIView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            # Логирование ошибок сериализатора
+            print("Сериализатор невалиден:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        activation_code = serializer.validated_data.get('activation_code')
         try:
-            serializer.is_valid(raise_exception=True)
-            activation_code = serializer.validated_data.get('activation_code')
-
-            # Поиск пользователя по коду активации
             user = get_object_or_404(CustomUser, activation_code=activation_code)
+
+            # Проверка срока действия кода
+            if user.activation_code_created_at and timezone.now() > user.activation_code_created_at + timedelta(minutes=5):
+                return Response({
+                    'response': False,
+                    'message': 'Срок действия кода активации истек.'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
             user.is_active = True
-            user.activation_code = ''  # Очистка кода активации
+            user.activation_code = ''
+            user.activation_code_created_at = None
             user.save()
 
             return Response({
                 'response': True,
-                'message': _('Ваш аккаунт успешно активирован.')
+                'message': 'Ваш аккаунт успешно активирован.'
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
+            print(f"Ошибка: {str(e)}")  # Логирование исключений
             return Response({
                 'response': False,
-                'message': _('Ошибка активации.')
+                'message': 'Ошибка активации.'
             }, status=status.HTTP_400_BAD_REQUEST)
+
 class UserLoginView(generics.CreateAPIView):
     """Аутентификация пользователя."""
     serializer_class = UserLoginSerializer

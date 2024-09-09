@@ -46,7 +46,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
         return user
 class ActivationCodeSerializer(serializers.Serializer):
-    activation_code = serializers.CharField(max_length=6)
+    activation_code = serializers.CharField(max_length=4)
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
