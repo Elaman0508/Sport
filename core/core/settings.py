@@ -15,7 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+import os
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -25,20 +25,26 @@ SECRET_KEY = 'django-insecure-&=$y0ii951b+gvto!)dn1x9z57xrvyf&yao8scpxfi^ik8p@ac
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
 INSTALLED_APPS = [
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'super_admin',
     'rest_framework',
+    'rest_framework.authtoken',
+    'drf_yasg',
+    'user',
+    'football',
+    'user_admin',
+    'volleyball',
 ]
 
 MIDDLEWARE = [
@@ -105,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -118,8 +124,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Укажите вашу кастомную модель пользователя
+AUTH_USER_MODEL = 'user.CustomUser'
+# ONE_C_REG = 'https://example.com/one-c-registration'  # Замените на реальный URL
+# ONE_C = 'Bearer your_auth_token'  # Замените на реальный токен
+#
+#  # Убедитесь, что этот URL правильный
+#
+# # settings.py
+# NIKITA_LOGIN = '12345'
+# NIKITA_PASSWORD = 'e61_PO4a'
+# NIKITA_SENDER = 'SMSPRO.KG'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kamiltaalaibekkyzy@gmail.com'
+EMAIL_HOST_PASSWORD = 'nskpxwpqtawdtvnw'
+# settings.py
+BASE_URL = 'http://127.0.0.1:8000/admin/'
