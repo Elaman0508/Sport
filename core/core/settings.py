@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'user_admin',
     'volleyball',
     'about_admin',
-    # 'paymen',
+
 ]
 
 MIDDLEWARE = [
