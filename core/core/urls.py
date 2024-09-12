@@ -9,7 +9,8 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('api/', include('bilimkana.urls')),
     path('api/', include('marketing.urls')),
-    path('api/', include('main.urls'))
+    path('api/', include('main.urls')),
+    path('api/', include('personal.urls')),
 
 ]
 urlpatterns += yasg_urls
