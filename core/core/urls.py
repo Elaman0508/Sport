@@ -7,9 +7,9 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
-    path('api/', include('bilimkana.urls')),
-    path('api/', include('marketing.urls')),
-    path('api/', include('main.urls'))
+    path('bilimkana/', include('bilimkana.urls')),
+    path('marketing/', include('marketing.urls')),
+    path('main/', include('main.urls'))
 
 ]
 urlpatterns += yasg_urls
