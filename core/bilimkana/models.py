@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -41,12 +42,17 @@ class Arena(models.Model):
 
 class Feedback(models.Model):
     name = models.CharField(max_length=100)  # Имя пользователя
-    rating = models.IntegerField()  # Оценка (1-5)
+    rating = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )  # Оценка (1-5)
     experience = models.TextField()  # Текст отзыва
     created_at = models.DateTimeField(auto_now_add=True)  # Дата создания
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - Rating: {self.rating}"
 
 
 class Review(models.Model):
@@ -56,7 +62,7 @@ class Review(models.Model):
     rating = models.IntegerField()
 
     def __str__(self):
-        return self.name
+        return f"{self.author} - Rating: {self.rating}"
 
 
 class Trainer(models.Model):
@@ -83,7 +89,7 @@ class ClassSchedule(models.Model):
     time = models.TimeField()
 
     def __str__(self):
-        return self.name
+        return self.class_name
 
 
 class ClubInfo(models.Model):
@@ -93,4 +99,4 @@ class ClubInfo(models.Model):
     client_reviews = models.TextField()
 
     def __str__(self):
-        return self.name
+        return self.title

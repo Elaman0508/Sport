@@ -1,6 +1,13 @@
 from django.urls import path
-from .views import *
-
+from .views import (
+    ArenaListCreateAPIView, ArenaRetrieveUpdateDestroyAPIView,
+    FeedbackListCreateView, FeedbackRetrieveUpdateDestroyAPIView,
+    ReviewListCreateAPIView, ReviewRetrieveUpdateDestroyAPIView,
+    TrainerListCreateAPIView, TrainerRetrieveUpdateDestroyAPIView,
+    ClassScheduleListCreateAPIView, ClassScheduleRetrieveUpdateDestroyAPIView,
+    ClubInfoListCreateAPIView, ClubInfoRetrieveUpdateDestroyAPIView,
+    RegistrationListCreateAPIView, RegistrationRetrieveUpdateDestroyAPIView
+)
 
 urlpatterns = [
     # Arena
@@ -8,7 +15,7 @@ urlpatterns = [
     path('bilimkana/arena/arenas/<int:pk>/', ArenaRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_arenas_read'),
 
     # Feedback
-    path('bilimkana/arena/feedback/', FeedbackListCreateAPIView.as_view(), name='bilimkana_arena_feedback_list'),
+    path('bilimkana/arena/feedback/', FeedbackListCreateView.as_view(), name='bilimkana_arena_feedback_list'),  # Исправлено
     path('bilimkana/arena/feedback/<int:pk>/', FeedbackRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_feedback_read'),
 
     # Reviews
