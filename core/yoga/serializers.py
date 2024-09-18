@@ -7,7 +7,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         model = Registration
         fields = ['user', 'basketball_class', 'is_free']
 
-        ref_name = 'BiimKanaRegistrationSerializer'
+        ref_name = 'YogaRegistrationSerializer'
 
     def validate(self, data):
         user = data['user']
@@ -27,7 +27,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ('author', 'content', 'rating')
 
-        ref_name = 'BiimKanaReviewSerializer'
+        ref_name = 'YogaReviewSerializer'
 
 
 class ArenaSerializer(serializers.ModelSerializer):
@@ -40,7 +40,7 @@ class ArenaSerializer(serializers.ModelSerializer):
             'lighting',
             'shower', 'reviews')
 
-        ref_name = 'BiimKanaArenaSerializer'
+        ref_name = 'YogaArenaSerializer'
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
@@ -48,13 +48,15 @@ class FeedbackSerializer(serializers.ModelSerializer):
         model = Feedback
         fields = ['id', 'name', 'rating', 'experience', 'created_at']
 
+        ref_name = 'YogaFeedbackSerializer'
+
 
 class TrainerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trainer
         fields = ['name', 'experience']
 
-        ref_name = 'BiimKanaTrainerSerializer'
+        ref_name = 'YogaTrainerSerializer'
 
 
 class ClassScheduleSerializer(serializers.ModelSerializer):
@@ -64,7 +66,7 @@ class ClassScheduleSerializer(serializers.ModelSerializer):
         model = ClassSchedule
         fields = '__all__'
 
-        ref_name = 'BiimKanaClassScheduleSerializer'
+        ref_name = 'YogaClassScheduleSerializer'
 
 
 class ClubInfoSerializer(serializers.ModelSerializer):
@@ -72,4 +74,4 @@ class ClubInfoSerializer(serializers.ModelSerializer):
         model = ClubInfo
         fields = ['title', 'description', 'advantages', 'client_reviews']
 
-        ref_name = 'BiimKanaClubInfoSerializer'
+        ref_name = 'YogaClubInfoSerializer'

@@ -3,10 +3,11 @@ from django.contrib.auth import get_user_model
 
 
 from django.conf import settings
+
 User = get_user_model()
 
 
-class BasketballClass(models.Model):
+class YogaClass(models.Model):
     name = models.CharField(max_length=255)
     date = models.DateTimeField()
     is_free_for_new_users = models.BooleanField(default=True)
@@ -16,8 +17,8 @@ class BasketballClass(models.Model):
 
 
 class Registration(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bilimkana_registrations')
-    basketball_class = models.ForeignKey(BasketballClass, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='Yoga_registrations')
+    basketball_class = models.ForeignKey(YogaClass, on_delete=models.CASCADE)
     is_free = models.BooleanField(default=False)
     registration_date = models.DateTimeField(auto_now_add=True)
 
