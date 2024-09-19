@@ -10,6 +10,7 @@ class BasketballClass(models.Model):
     name = models.CharField(max_length=255)
     date = models.DateTimeField()
     is_free_for_new_users = models.BooleanField(default=True)
+    img = models.ImageField(blank=True, null=True, upload_to='class_images/')
 
     def __str__(self):
         return self.name
@@ -56,6 +57,7 @@ class Review(models.Model):
     author = models.CharField(max_length=255)
     content = models.TextField()
     rating = models.IntegerField()
+    video = models.FileField(upload_to='videos/', null=True, blank=True)
 
     def __str__(self):
         return self.name

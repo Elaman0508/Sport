@@ -14,6 +14,9 @@ urlpatterns = [
     path('boxing/', include('boxing.urls')),
     path('bike/', include('bike.urls')),
     path('relax/', include('yoga.urls')),
+    path('tennis/', include('tennis.urls')),
+    path('swim/', include('swim.urls')),
+    path('tekwando/', include('tekwando.urls')),
 
 
 ]

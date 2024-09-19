@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'boxing',
     'bike',
     'yoga',
+    'tennis',
+    'swim',
+    'tekwando',
 
 ]
 
