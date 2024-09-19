@@ -1,11 +1,10 @@
-
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 import os
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -14,7 +13,6 @@ SECRET_KEY = 'django-insecure-&=$y0ii951b+gvto!)dn1x9z57xrvyf&yao8scpxfi^ik8p@ac
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 
 ALLOWED_HOSTS = ["*"]
 
@@ -35,10 +33,11 @@ INSTALLED_APPS = [
     'drf_yasg',
     'user',
     'corsheaders',
-    #apps
+    # apps
     'bilimkana',
     'marketing',
     'main',
+    'personal',
 ]
 
 MEDIA_URL = '/media/'
@@ -76,8 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
-
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51Ps1IcKVaMgv7sI2ZURWU7rW2r56h7h8afp26AVBis7KAUk7YPdosHUwBwdKqSgSg1t3Kd2U2pV4BA6s8ducs2Ey00H3WqY3Pu'
 STRIPE_SECRET_KEY = 'sk_test_51Ps1IcKVaMgv7sI2c7NPQmbbJuZTdEp3akB14GZ6TuToURlTsI0aeKmX6GcPr70ACIwsYxR3psipEnt16AK1gD6s006x45h1br'
 
@@ -90,7 +87,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -110,7 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -122,14 +117,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -146,6 +138,7 @@ AUTH_USER_MODEL = 'user.CustomUser'
 # NIKITA_LOGIN = '12345'
 # NIKITA_PASSWORD = 'e61_PO4a'
 # NIKITA_SENDER = 'SMSPRO.KG'
+
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
