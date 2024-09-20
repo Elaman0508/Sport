@@ -38,6 +38,13 @@ INSTALLED_APPS = [
     'marketing',
     'main',
     'personal',
+    'boxing',
+    'bike',
+    'yoga',
+    'tennis',
+    'swim',
+    'tekwando',
+
 ]
 
 MEDIA_URL = '/media/'
@@ -138,7 +145,6 @@ AUTH_USER_MODEL = 'user.CustomUser'
 # NIKITA_LOGIN = '12345'
 # NIKITA_PASSWORD = 'e61_PO4a'
 # NIKITA_SENDER = 'SMSPRO.KG'
-
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

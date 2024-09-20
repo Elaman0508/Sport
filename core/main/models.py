@@ -20,7 +20,11 @@ class SportClass(models.Model):
     class_name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     schedule = models.CharField(max_length=255, blank=True, null=True)
+<<<<<<< HEAD
     image = models.ImageField(upload_to='sport_classes/', blank=True, null=True)
+=======
+    img = models.ImageField(blank=True, null=True, upload_to='class_images/')
+>>>>>>> adyl-hub
 
     def __str__(self):
         return f"{self.sport_type} - {self.class_name}"
@@ -29,7 +33,7 @@ class SportClass(models.Model):
 class GymInfo(models.Model):
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, unique=True)
     description = models.TextField()
     instagram = models.URLField(blank=True, null=True)
     installment_options = models.CharField(max_length=100)  # "6/9/12 месяцев"

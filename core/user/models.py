@@ -16,7 +16,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
+<<<<<<< HEAD
     # REQUIRED_FIELDS = ['first_name', 'last_name']
+=======
+
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+>>>>>>> adyl-hub
 
     class Meta:
         verbose_name = "Пользователь"

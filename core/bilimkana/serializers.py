@@ -7,6 +7,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
         model = Registration
         fields = ['user', 'basketball_class', 'is_free']
 
+        ref_name = 'BiimKanaRegistrationSerializer'
+
     def validate(self, data):
         user = data['user']
         basketball_class = data['basketball_class']
@@ -25,6 +27,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ('author', 'content', 'rating')
 
+        ref_name = 'BiimKanaReviewSerializer'
+
 
 class ArenaSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
@@ -35,6 +39,8 @@ class ArenaSerializer(serializers.ModelSerializer):
             'name', 'size', 'flooring', 'court_count', 'equipment', 'type', 'price_per_hour', 'changing_room',
             'lighting',
             'shower', 'reviews')
+
+        ref_name = 'BiimKanaArenaSerializer'
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
@@ -48,6 +54,8 @@ class TrainerSerializer(serializers.ModelSerializer):
         model = Trainer
         fields = ['name', 'experience']
 
+        ref_name = 'BiimKanaTrainerSerializer'
+
 
 class ClassScheduleSerializer(serializers.ModelSerializer):
     trainer = TrainerSerializer()
@@ -56,8 +64,12 @@ class ClassScheduleSerializer(serializers.ModelSerializer):
         model = ClassSchedule
         fields = '__all__'
 
+        ref_name = 'BiimKanaClassScheduleSerializer'
+
 
 class ClubInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubInfo
         fields = ['title', 'description', 'advantages', 'client_reviews']
+
+        ref_name = 'BiimKanaClubInfoSerializer'
