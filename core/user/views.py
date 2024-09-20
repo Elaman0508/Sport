@@ -20,9 +20,11 @@ from .serializers import UserRegistrationSerializer, ActivationCodeSerializer, U
 
 logger = logging.getLogger(__name__)
 
+
 def generate_activation_code():
     """Генерирует случайный код активации, состоящий только из цифр, длиной 6 символов."""
     return ''.join(random.choices(string.digits, k=4))
+
 
 def validate_password(password):
     """Проверка пароля на минимум 8 символов, наличие заглавной буквы, цифры и строчной буквы."""
@@ -35,6 +37,7 @@ def validate_password(password):
     if not re.search(r'[0-9]', password):
         return False, _('Пароль должен содержать хотя бы одну цифру.')
     return True, ''
+
 
 class RegistrationAPIView(generics.CreateAPIView):
     """Регистрация нового пользователя."""
@@ -107,7 +110,8 @@ class RegistrationAPIView(generics.CreateAPIView):
 
             return Response({
                 'response': True,
-                'message': _('Пользователь успешно зарегистрирован. Проверьте вашу электронную почту для получения кода активации.')
+                'message': _(
+                    'Пользователь успешно зарегистрирован. Проверьте вашу электронную почту для получения кода активации.')
             }, status=status.HTTP_201_CREATED)
 
         except IntegrityError as e:
@@ -122,32 +126,46 @@ class RegistrationAPIView(generics.CreateAPIView):
                 'message': _('Не удалось зарегистрировать пользователя.')
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 class ActivationAPIView(generics.GenericAPIView):
     serializer_class = ActivationCodeSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            # Логирование ошибок сериализатора
+            print("Сериализатор невалиден:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        activation_code = serializer.validated_data.get('activation_code')
         try:
-            serializer.is_valid(raise_exception=True)
-            activation_code = serializer.validated_data.get('activation_code')
-
-            # Поиск пользователя по коду активации
             user = get_object_or_404(CustomUser, activation_code=activation_code)
+
+            # Проверка срока действия кода (1 час)
+            if user.activation_code_created_at and timezone.now() > user.activation_code_created_at + timedelta(hours=1):
+                return Response({
+                    'response': False,
+                    'message': 'Срок действия кода активации истек.'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
             user.is_active = True
-            user.activation_code = ''  # Очистка кода активации
+            user.activation_code = ''
+            user.activation_code_created_at = None
             user.save()
 
             return Response({
                 'response': True,
-                'message': _('Ваш аккаунт успешно активирован.')
+                'message': 'Ваш аккаунт успешно активирован.'
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
+            print(f"Ошибка: {str(e)}")  # Логирование исключений
             return Response({
                 'response': False,
-                'message': _('Ошибка активации.')
+                'message': 'Ошибка активации.'
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
 class UserLoginView(generics.CreateAPIView):
     """Аутентификация пользователя."""
     serializer_class = UserLoginSerializer
@@ -172,6 +190,7 @@ class UserLoginView(generics.CreateAPIView):
 
 class RegistrationMessageAPIView(APIView):
     """Возвращает сообщение о необходимости регистрации для размещения рекламы."""
+
     def get(self, request, *args, **kwargs):
         # Создание сериализатора с предварительно определенными данными
         serializer = RegistrationMessageSerializer(
@@ -179,6 +198,8 @@ class RegistrationMessageAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         # Возвращаем сериализованные данные в ответе
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ResetPasswordView(generics.GenericAPIView):
     """Запрос на сброс пароля."""
     serializer_class = ResetPasswordSerializer
@@ -216,6 +237,7 @@ class ResetPasswordView(generics.GenericAPIView):
                 'response': False,
                 'message': _('Пользователь с этим адресом электронной почты не найден.')
             }, status=status.HTTP_404_NOT_FOUND)
+
 
 class ResetPasswordVerifyView(generics.GenericAPIView):
     """Подтверждение сброса пароля."""
