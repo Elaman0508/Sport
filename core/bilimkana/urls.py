@@ -1,17 +1,40 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import *
-
-router = DefaultRouter()
-router.register(r'arenas', ArenaViewSet)
-router.register(r'feedback', FeedbackViewSet, basename='feedback')
-router.register(r'reviews', ReviewViewSet, basename='reviews')
-router.register(r'trainers', TrainerViewSet)
-router.register(r'class-schedule', ClassScheduleViewSet)
-router.register(r'club-info', ClubInfoViewSet)
-router.register(r'registrations', RegistrationViewSet, basename='registrations')
-
+from django.urls import path
+from .views import (
+    ArenaListCreateAPIView, ArenaRetrieveUpdateDestroyAPIView,
+    FeedbackListCreateView, FeedbackRetrieveUpdateDestroyAPIView,
+    ReviewListCreateAPIView, ReviewRetrieveUpdateDestroyAPIView,
+    TrainerListCreateAPIView, TrainerRetrieveUpdateDestroyAPIView,
+    ClassScheduleListCreateAPIView, ClassScheduleRetrieveUpdateDestroyAPIView,
+    ClubInfoListCreateAPIView, ClubInfoRetrieveUpdateDestroyAPIView,
+    RegistrationListCreateAPIView, RegistrationRetrieveUpdateDestroyAPIView
+)
 
 urlpatterns = [
-    path('arena/', include(router.urls)),
+    # Arena
+    path('bilimkana/arena/arenas/', ArenaListCreateAPIView.as_view(), name='bilimkana_arena_arenas_list'),
+    path('bilimkana/arena/arenas/<int:pk>/', ArenaRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_arenas_read'),
+
+    # Feedback
+    path('bilimkana/arena/feedback/', FeedbackListCreateView.as_view(), name='bilimkana_arena_feedback_list'),  # Исправлено
+    path('bilimkana/arena/feedback/<int:pk>/', FeedbackRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_feedback_read'),
+
+    # Reviews
+    path('bilimkana/arena/reviews/', ReviewListCreateAPIView.as_view(), name='bilimkana_arena_reviews_list'),
+    path('bilimkana/arena/reviews/<int:pk>/', ReviewRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_reviews_read'),
+
+    # Trainers
+    path('bilimkana/arena/trainers/', TrainerListCreateAPIView.as_view(), name='bilimkana_arena_trainers_list'),
+    path('bilimkana/arena/trainers/<int:pk>/', TrainerRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_trainers_read'),
+
+    # Class Schedule
+    path('bilimkana/arena/class-schedule/', ClassScheduleListCreateAPIView.as_view(), name='bilimkana_arena_class-schedule_list'),
+    path('bilimkana/arena/class-schedule/<int:pk>/', ClassScheduleRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_class-schedule_read'),
+
+    # Club Info
+    path('bilimkana/arena/club-info/', ClubInfoListCreateAPIView.as_view(), name='bilimkana_arena_club-info_list'),
+    path('bilimkana/arena/club-info/<int:pk>/', ClubInfoRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_club-info_read'),
+
+    # Registrations
+    path('bilimkana/arena/registrations/', RegistrationListCreateAPIView.as_view(), name='bilimkana_arena_registrations_list'),
+    path('bilimkana/arena/registrations/<int:pk>/', RegistrationRetrieveUpdateDestroyAPIView.as_view(), name='bilimkana_arena_registrations_read'),
 ]

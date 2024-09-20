@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings  # Импортируем settings для использования кастомной модели пользователя
+from django.contrib.auth.models import User
 
 
 class Sport(models.Model):
@@ -19,7 +20,8 @@ class Schedule(models.Model):
 
 
 class Attendance(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Ссылка на кастомную модель пользователя
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)  # Ссылка на кастомную модель пользователя
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     attended = models.BooleanField(default=False)
 
@@ -28,7 +30,8 @@ class Attendance(models.Model):
 
 
 class Payment1(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Ссылка на кастомную модель пользователя
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)  # Ссылка на кастомную модель пользователя
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     paid = models.BooleanField(default=False)
@@ -39,3 +42,15 @@ class Payment1(models.Model):
 
     class Meta:
         ordering = ['-payment_date']
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20, unique=True)
+    birth_date = models.DateField()
+    gender = models.CharField(max_length=10)
+    address = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.full_name
