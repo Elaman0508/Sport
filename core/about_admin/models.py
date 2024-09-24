@@ -152,3 +152,60 @@ class Schedul(models.Model):  # Рекомендуется переименов�
     class Meta:
         verbose_name = 'Расписание'
         verbose_name_plural = 'Расписания'
+
+class Trainer(models.Model):
+    SPORT_CHOICES = [
+        ('basketball', 'Баскетбол'),
+        ('football', 'Футбол'),
+        ('volleyball', 'Волейбол'),
+        ('tennis', 'Теннис'),
+        ('boxing', 'Бокс'),
+        ('cycling', 'Велоспорт'),
+        ('taekwondo', 'Таэквондо'),
+        ('swimming', 'Плавание'),
+        ('yoga', 'Йога'),
+    ]
+
+    first_name = models.CharField(verbose_name='Имя', max_length=255)
+    last_name = models.CharField(verbose_name='Фамилия', max_length=255)
+    email = models.EmailField(verbose_name='Электронная почта')
+    phone = models.CharField(verbose_name='Телефон', max_length=20)
+    sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
+    class Meta:
+        verbose_name = 'Тренер'
+        verbose_name_plural = 'Тренеры'
+
+class Client(models.Model):
+    PAYMENT_METHOD_CHOICES = [
+        ('cash', 'Наличные'),
+        ('card', 'Карта'),
+        ('transfer', 'Перевод'),
+    ]
+
+    SPORT_CHOICES = [
+        ('basketball', 'Баскетбол'),
+        ('football', 'Футбол'),
+        ('volleyball', 'Волейбол'),
+        ('tennis', 'Теннис'),
+        ('boxing', 'Бокс'),
+        ('cycling', 'Велоспорт'),
+        ('taekwondo', 'Таэквондо'),
+        ('swimming', 'Плавание'),
+        ('yoga', 'Йога'),
+    ]
+
+    name = models.CharField(verbose_name='Имя', max_length=255)
+    trainer = models.ForeignKey(Trainer, related_name='clients', on_delete=models.CASCADE, verbose_name='Тренер')
+    sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
+    payment_method = models.CharField(verbose_name='Метод оплаты', max_length=10, choices=PAYMENT_METHOD_CHOICES)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Клиент'
+        verbose_name_plural = 'Клиенты'

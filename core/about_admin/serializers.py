@@ -1,8 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-
-from .models import HallImage, Schedule, Hall, CircleImage, Schedul, Circle
-
+from .models import *
 
 class HallImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,3 +63,23 @@ class UserLoginSerializer(serializers.Serializer):
         if user is None:
             raise serializers.ValidationError("Неверный логин или пароль.")
         return {'user': user}
+
+
+class TrainerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trainer
+        fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'sport']  # Include the fields you want to expose
+
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ['id', 'name', 'trainer', 'sport', 'payment_method']  # Include the fields you want to expose
+
+    # Optional: Customize the representation to include the trainer's name
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['trainer'] = {
+            'id': instance.trainer.id,
+            'name': f"{instance.trainer.first_name} {instance.trainer.last_name}",
+        }
+        return representation

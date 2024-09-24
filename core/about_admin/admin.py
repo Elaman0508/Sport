@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Hall, Schedule, HallImage, Circle, CircleImage, Schedul  # Переименуйте Schedul в Schedule, если нужно
-
+from .models import *
 class HallImageInline(admin.TabularInline):
     model = HallImage
     extra = 1
@@ -52,3 +51,17 @@ class SchedulAdmin(admin.ModelAdmin):  # Переименуйте в ScheduleAdm
     list_filter = ('age_group', 'day_of_week')
 
 admin.site.register(Schedule)  # Зарегистрируйте модель Schedule, если она переименована
+
+@admin.register(Trainer)
+class TrainerAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'sport')
+    search_fields = ('first_name', 'last_name', 'email', 'phone')
+    list_filter = ('sport',)
+    ordering = ('last_name',)
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'trainer', 'sport', 'payment_method')  # Use existing field 'name'
+    search_fields = ('name', 'trainer__first_name', 'trainer__last_name')  # Update for the existing field
+    list_filter = ('sport', 'trainer')
+    ordering = ('name',)  # Use 'name' for ordering

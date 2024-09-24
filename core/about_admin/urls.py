@@ -11,6 +11,11 @@ urlpatterns = [
     path('circles/', CircleListCreateView.as_view(), name='circle-list-create'),
     path('circles/<int:pk>/', CircleRetrieveUpdateDestroyView.as_view(), name='circle-retrieve-update-destroy'),
     path('login/', UserLoginView.as_view(), name='login'),
+    path('trainers/', TrainerListCreateView.as_view(), name='trainer-list-create'),
+    path('trainers/<int:pk>/', TrainerRetrieveUpdateDestroyView.as_view(), name='trainer-detail'),
+    path('clients/', ClientListCreateView.as_view(), name='client-list-create'),
+    path('clients/<int:pk>/', ClientRetrieveUpdateDestroyView.as_view(), name='client-detail'),
+
 ]
 
 # Include the router's URLs in your urlpatterns if you have any viewsets registered

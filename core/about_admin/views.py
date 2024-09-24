@@ -44,3 +44,21 @@ class UserLoginView(generics.CreateAPIView):
         #     'response': False,
         #     'message': serializer.errors
         # }, status=status.HTTP_400_BAD_REQUEST)
+class TrainerListCreateView(generics.ListCreateAPIView):
+    queryset = Trainer.objects.all()
+    serializer_class = TrainerSerializer
+
+# View for retrieving, updating, and deleting a specific Trainer
+class TrainerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Trainer.objects.all()
+    serializer_class = TrainerSerializer
+
+# View for listing and creating Clients
+class ClientListCreateView(generics.ListCreateAPIView):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+
+# View for retrieving, updating, and deleting a specific Client
+class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
