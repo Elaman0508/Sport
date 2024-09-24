@@ -35,18 +35,9 @@ class Hall(models.Model):
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
 
-class HallImage(models.Model):
-    hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
-    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
 
-    def __str__(self):
-        return f'Изображение зала {self.hall.title}'
-
-    class Meta:
-        verbose_name = 'Изображение зала'
-        verbose_name_plural = 'Изображения залов'
 class Schedule(models.Model):
-    DAY_CHOICES = [
+    DAYS_OF_WEEK = [
         ('monday', 'Понедельник'),
         ('tuesday', 'Вторник'),
         ('wednesday', 'Среда'),
@@ -56,18 +47,30 @@ class Schedule(models.Model):
         ('sunday', 'Воскресенье'),
     ]
 
-    hall = models.ForeignKey('Hall', related_name='schedules', on_delete=models.CASCADE, verbose_name='Зал')
-    day_of_week = models.CharField(verbose_name='День недели', max_length=9, choices=DAY_CHOICES)
-    start_time = models.TimeField(verbose_name='Время начала')
-    end_time = models.TimeField(verbose_name='Время окончания')
+    hall = models.ForeignKey(Hall, related_name='schedules', on_delete=models.CASCADE, verbose_name='Зал')
+    day_of_week = models.CharField(verbose_name='День недели', max_length=10, choices=DAYS_OF_WEEK)
+    start_time = models.TimeField(verbose_name='Начало работы')
+    end_time = models.TimeField(verbose_name='Конец работы')
 
     def __str__(self):
         return f'{self.hall.title} - {self.day_of_week}'
 
     class Meta:
-        verbose_name = 'Расписание'
-        verbose_name_plural = 'Расписания'
-        ordering = ['day_of_week', 'start_time']
+        verbose_name = 'График работы'
+        verbose_name_plural = 'Графики работы'
+
+
+class HallImage(models.Model):
+    hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
+    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
+    description = models.CharField(max_length=255, blank=True, verbose_name='Описание изображения')  # Дополнительное поле для описания
+
+    def __str__(self):
+        return f'Изображение зала {self.hall.title}'
+
+    class Meta:
+        verbose_name = 'Изображение зала'
+        verbose_name_plural = 'Изображения залов'
 
 
 class Circle(models.Model):
@@ -106,9 +109,11 @@ class Circle(models.Model):
         verbose_name = 'Кружок'
         verbose_name_plural = 'Кружки'
 
+
 class CircleImage(models.Model):
     image = models.ImageField(upload_to='circle_images/', verbose_name='Фото')
     circle = models.ForeignKey(Circle, related_name='circle_images', on_delete=models.CASCADE, verbose_name='Кружок')
+    description = models.CharField(max_length=255, blank=True, verbose_name='Описание изображения')  # Дополнительное поле для описания
 
     def __str__(self):
         return f'Изображение {self.id}'
@@ -116,3 +121,34 @@ class CircleImage(models.Model):
     class Meta:
         verbose_name = 'Фото кружка'
         verbose_name_plural = 'Фото кружков'
+
+
+class Schedul(models.Model):  # Рекомендуется переименовать в Schedule
+    AGE_GROUP_CHOICES = [
+        ('adults', 'Взрослые'),
+        ('teens', 'Подростки'),
+        ('kids', 'Дети'),
+    ]
+
+    DAYS_OF_WEEK = [
+        ('monday', 'Понедельник'),
+        ('tuesday', 'Вторник'),
+        ('wednesday', 'Среда'),
+        ('thursday', 'Четверг'),
+        ('friday', 'Пятница'),
+        ('saturday', 'Суббота'),
+        ('sunday', 'Воскресенье'),
+    ]
+
+    circle = models.ForeignKey(Circle, related_name='schedules', on_delete=models.CASCADE, verbose_name='Кружок')
+    age_group = models.CharField(verbose_name='Возрастная группа', max_length=10, choices=AGE_GROUP_CHOICES)
+    day_of_week = models.CharField(verbose_name='День недели', max_length=10, choices=DAYS_OF_WEEK)
+    start_time = models.TimeField(verbose_name='Начало занятий')
+    end_time = models.TimeField(verbose_name='Конец занятий')
+
+    def __str__(self):
+        return f'{self.circle.title} ({self.age_group}) - {self.day_of_week}'
+
+    class Meta:
+        verbose_name = 'Расписание'
+        verbose_name_plural = 'Расписания'

@@ -1,36 +1,46 @@
-from time import timezone
-from django.db.models import Q
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.parsers import MultiPartParser, FormParser
-from .models import Hall, Schedule, Circle
-from .serializers import HallSerializer, ScheduleSerializer, CircleSerializer
-
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from .models import Hall, Circle
+from .serializers import *
 
 class HallListCreateView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
-    parser_classes = (MultiPartParser, FormParser)  # Поддержка загрузки файлов
+  # Support for file uploads
 
-class HallRetrieveUpdateDestroyView(generics.RetrieveAPIView):
+class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
-    serializer_class = HallSerializer
-    parser_classes = (MultiPartParser, FormParser)  # Поддержка загрузки файлов
+    serializer_class = HallSerializer # Support for file uploads
 
-
-class ScheduleListView(generics.ListCreateAPIView):
-    serializer_class = ScheduleSerializer
-
-    def get_queryset(self):
-        current_day = timezone.now().strftime('%A')  # Получаем текущий день недели
-        current_time = timezone.now().time()  # Получаем текущее время
-
-        # Фильтрация расписания
-        queryset = Schedule.objects.filter(
-            Q(day_of_week=current_day) &
-            Q(start_time__lte=current_time) &
-            Q(end_time__gte=current_time)
-        )
-        return queryset
 class CircleListCreateView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
+
+class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Circle.objects.all()
+    serializer_class = CircleSerializer
+class UserLoginView(generics.CreateAPIView):
+    """User authentication."""
+    serializer_class = UserLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data.get('user')
+
+        # Token creation
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response({
+            'response': True,
+            'token': token.key
+        }, status=status.HTTP_200_OK)
+
+        # The following return would be unnecessary because of `is_valid(raise_exception=True)`
+        # However, if you want to keep the validation, you can use the serializer's errors:
+        # return Response({
+        #     'response': False,
+        #     'message': serializer.errors
+        # }, status=status.HTTP_400_BAD_REQUEST)
