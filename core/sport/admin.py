@@ -26,20 +26,18 @@ class HallAdmin(admin.ModelAdmin):
     list_display = ('title', 'sport')
     search_fields = ('title',)
     list_filter = ('sport',)
-    inlines = [HallImageInline]
 
 @admin.register(HallInfo)
 class HallInfoAdmin(admin.ModelAdmin):
-    list_display = ('hall', 'description')
+    list_display = ('description',)
     search_fields = ('description',)
-    list_filter = ('hall',)
     inlines = [HallImageInline]
 
 @admin.register(HallArena)
 class HallArenaAdmin(admin.ModelAdmin):
-    list_display = ('hall', 'title', 'capacity')
+    list_display = ('title', 'capacity')  # Убедитесь, что все поля существуют
     search_fields = ('title', 'hall__title')
-    list_filter = ('hall',)
+    list_filter = ('hall',) if hasattr(HallArena, 'hall') else []  # Аналогичная проверка для 'hall'
 
 class ClubImageInline(admin.TabularInline):
     model = ClubImage
@@ -48,18 +46,28 @@ class ClubImageInline(admin.TabularInline):
 class ClubAdmin(admin.ModelAdmin):
     list_display = ('title', 'sport')
     search_fields = ('title',)
+    list_filter = ('sport',)
     inlines = [ClubImageInline]
 
 admin.site.register(Club, ClubAdmin)
+
+
 @admin.register(ClubAdditionalInfo)
 class ClubAdditionalInfoAdmin(admin.ModelAdmin):
-    list_display = ('club', 'title')
-    search_fields = ('title',)
-    inlines = [ClubImageInline]  # Add the inline for ClubImage
+    list_display = ('title', 'address', 'phone')
+    search_fields = ('title', 'description', 'address')
+    list_filter = ('address',)  # Убедитесь, что используете правильные поля
+    ordering = ('title',)
 
-class ClubImageAdmin(admin.ModelAdmin):
-    list_display = ('club',)
-    search_fields = ('club__title',)
+    fieldsets = (
+        (None, {
+            'fields': ('club', 'title', 'subtitle', 'description', 'video_link', 'address', 'phone')
+        }),
+        ('Дополнительная информация', {
+            'fields': ('details',)  # Используйте более описательные названия
+        }),
+    )
+    inlines = [ClubImageInline]
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):

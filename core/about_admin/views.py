@@ -17,7 +17,7 @@ class HallRetrieveUpdateDestroyView(generics.RetrieveAPIView):
     parser_classes = (MultiPartParser, FormParser)  # Поддержка загрузки файлов
 
 
-class ScheduleListView(generics.ListAPIView):
+class ScheduleListView(generics.ListCreateAPIView):
     serializer_class = ScheduleSerializer
 
     def get_queryset(self):
