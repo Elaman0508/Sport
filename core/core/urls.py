@@ -22,10 +22,8 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/',include('user.urls')),
-    path('football/', include('football.urls')),
-    path('user_admin/',include('user_admin.urls')),
-    path('volleyball/',include('volleyball.urls')),
     path('about_admin/',include('about_admin.urls')),
+    path('sport/',include('sport.urls'))
 
 ]
 urlpatterns += yasg_urls

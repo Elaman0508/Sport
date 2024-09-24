@@ -42,10 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'user',
-    'football',
-    'user_admin',
-    'volleyball',
     'about_admin',
+    'sport',
 
 ]
 
