@@ -24,9 +24,6 @@ class Sport(models.Model):
 
     def __str__(self):
         return self.name
-
-
-# Модель Зала
 class Hall(models.Model):
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Название')
@@ -40,9 +37,9 @@ class Hall(models.Model):
     def __str__(self):
         return self.title
 
-
 # Модель Информации о Зале
 class HallInfo(models.Model):
+    hall = models.ForeignKey(Hall, related_name='info', on_delete=models.CASCADE)
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
 
@@ -53,6 +50,7 @@ class HallInfo(models.Model):
 
 # Модель Арены Зала
 class HallArena(models.Model):
+    hall = models.ForeignKey(Hall, related_name='arenas', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Название')
     dimensions = models.CharField(max_length=255, verbose_name='Размеры зала')
     capacity = models.CharField(max_length=10, verbose_name='Количество мест')
@@ -69,6 +67,7 @@ class HallArena(models.Model):
     class Meta:
         verbose_name = 'Арена зала'
         verbose_name_plural = 'Арены залов'
+
 
 class Club(models.Model):
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name='clubs')  # Added related_name
@@ -90,6 +89,7 @@ class Club(models.Model):
         return self.additional_info.all()  # New method to get related additional info
 
 class ClubAdditionalInfo(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name='Клуб')
     title = models.CharField(max_length=255, verbose_name='Название')
     title3 = models.CharField(max_length=255, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
@@ -152,8 +152,6 @@ class HallImage(models.Model):
         verbose_name = 'Изображение зала'
         verbose_name_plural = 'Изображения залов'
 
-    def __str__(self):
-        return f'Изображение зала: {self.hall_info.hall.title}'
 
 
 

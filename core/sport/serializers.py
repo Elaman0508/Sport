@@ -29,8 +29,8 @@ class HallArenaSerializer(serializers.ModelSerializer):
 
 class HallSerializer(serializers.ModelSerializer):
     images = HallImageSerializer(many=True, read_only=True)
-    hall_info = HallInfoSerializer(many=True, read_only=True)
-    hall_arena = HallArenaSerializer(many=True, read_only=True)
+    arenas = HallArenaSerializer(many=True, read_only=True)  # Связанные арены зала
+    info = HallInfoSerializer(many=True, read_only=True)
     sport = filters.CharFilter(field_name='sport', lookup_expr='exact')
 
     class Meta:

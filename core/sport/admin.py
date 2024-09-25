@@ -23,21 +23,20 @@ class HallImageInline(admin.TabularInline):
 
 @admin.register(Hall)
 class HallAdmin(admin.ModelAdmin):
-    list_display = ('title', 'sport')
-    search_fields = ('title',)
-    list_filter = ('sport',)
+    list_display = ('title', 'sport')  # Отображаемые колонки в админке
+    search_fields = ('title', 'sport__name')  # Поля для поиска
 
 @admin.register(HallInfo)
 class HallInfoAdmin(admin.ModelAdmin):
-    list_display = ('description',)
-    search_fields = ('description',)
+    list_display = ('hall', 'description')  # Отображаемые поля
+    search_fields = ('hall__title', 'description')
     inlines = [HallImageInline]
 
 @admin.register(HallArena)
 class HallArenaAdmin(admin.ModelAdmin):
-    list_display = ('title', 'capacity')  # Убедитесь, что все поля существуют
-    search_fields = ('title', 'hall__title')
-    list_filter = ('hall',) if hasattr(HallArena, 'hall') else []  # Аналогичная проверка для 'hall'
+    list_display = ('hall', 'title', 'capacity', 'hourly_rate')  # Отображаемые колонки
+    search_fields = ('hall__title', 'title', 'capacity')  # Поля для поиска
+    list_filter = ('hall', 'type', 'covering')  # Аналогичная проверка для 'hall'
 
 class ClubImageInline(admin.TabularInline):
     model = ClubImage
@@ -51,23 +50,12 @@ class ClubAdmin(admin.ModelAdmin):
 
 admin.site.register(Club, ClubAdmin)
 
-
 @admin.register(ClubAdditionalInfo)
 class ClubAdditionalInfoAdmin(admin.ModelAdmin):
-    list_display = ('title', 'address', 'phone')
-    search_fields = ('title', 'description', 'address')
-    list_filter = ('address',)  # Убедитесь, что используете правильные поля
-    ordering = ('title',)
-
-    fieldsets = (
-        (None, {
-            'fields': ('club', 'title', 'subtitle', 'description', 'video_link', 'address', 'phone')
-        }),
-        ('Дополнительная информация', {
-            'fields': ('details',)  # Используйте более описательные названия
-        }),
-    )
+    list_display = ('club', 'title', 'title1', 'title2')  # Используйте поля, которые существуют в модели
+    fields = ('club', 'title', 'title1', 'title2', 'description', 'description1', 'description2', 'video_link', 'address', 'phone')
     inlines = [ClubImageInline]
+
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):

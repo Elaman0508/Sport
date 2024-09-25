@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'user',
-    'about_admin',
+    'administrator',
     'sport',
     'corsheaders',
     'django_filters',

@@ -28,25 +28,16 @@ class Hall(models.Model):
     lighting = models.BooleanField(verbose_name='Освещение', default=False)
     shower = models.BooleanField(verbose_name='Душевая', default=False)
 
-    def str(self):
+    def __str__(self):
         return self.title
 
     class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
 
-class HallImage(models.Model):
-    hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
-    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
 
-    def str(self):
-        return f'Изображение зала {self.hall.title}'
-
-    class Meta:
-        verbose_name = 'Изображение зала'
-        verbose_name_plural = 'Изображения залов'
 class Schedule(models.Model):
-    DAY_CHOICES = [
+    DAYS_OF_WEEK = [
         ('monday', 'Понедельник'),
         ('tuesday', 'Вторник'),
         ('wednesday', 'Среда'),
@@ -56,18 +47,30 @@ class Schedule(models.Model):
         ('sunday', 'Воскресенье'),
     ]
 
-    hall = models.ForeignKey('Hall', related_name='schedules', on_delete=models.CASCADE, verbose_name='Зал')
-    day_of_week = models.CharField(verbose_name='День недели', max_length=9, choices=DAY_CHOICES)
-    start_time = models.TimeField(verbose_name='Время начала')
-    end_time = models.TimeField(verbose_name='Время окончания')
+    hall = models.ForeignKey(Hall, related_name='schedules', on_delete=models.CASCADE, verbose_name='Зал')
+    day_of_week = models.CharField(verbose_name='День недели', max_length=10, choices=DAYS_OF_WEEK)
+    start_time = models.TimeField(verbose_name='Начало работы')
+    end_time = models.TimeField(verbose_name='Конец работы')
 
-    def str(self):
+    def __str__(self):
         return f'{self.hall.title} - {self.day_of_week}'
 
     class Meta:
-        verbose_name = 'Расписание'
-        verbose_name_plural = 'Расписания'
-        ordering = ['day_of_week', 'start_time']
+        verbose_name = 'График работы'
+        verbose_name_plural = 'Графики работы'
+
+
+class HallImage(models.Model):
+    hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
+    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
+    description = models.CharField(max_length=255, blank=True, verbose_name='Описание изображения')  # Дополнительное поле для описания
+
+    def __str__(self):
+        return f'Изображение зала {self.hall.title}'
+
+    class Meta:
+        verbose_name = 'Изображение зала'
+        verbose_name_plural = 'Изображения залов'
 
 
 class Circle(models.Model):
@@ -88,6 +91,7 @@ class Circle(models.Model):
     address = models.CharField(verbose_name='Адрес', max_length=255)
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     images = models.ManyToManyField('CircleImage', verbose_name='Фото', blank=True, related_name='circles')
+
     # Поля для заголовков и описаний
     header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     header2 = models.CharField(verbose_name='Заголовок 2', max_length=255, blank=True)
@@ -98,7 +102,7 @@ class Circle(models.Model):
     description3 = models.TextField(verbose_name='Описание 3', blank=True)
     description4 = models.TextField(verbose_name='Описание 4', blank=True)
 
-    def str(self):
+    def __str__(self):
         return self.title
 
     class Meta:
@@ -109,8 +113,9 @@ class Circle(models.Model):
 class CircleImage(models.Model):
     image = models.ImageField(upload_to='circle_images/', verbose_name='Фото')
     circle = models.ForeignKey(Circle, related_name='circle_images', on_delete=models.CASCADE, verbose_name='Кружок')
+    description = models.CharField(max_length=255, blank=True, verbose_name='Описание изображения')  # Дополнительное поле для описания
 
-    def str(self):
+    def __str__(self):
         return f'Изображение {self.id}'
 
     class Meta:
@@ -118,12 +123,42 @@ class CircleImage(models.Model):
         verbose_name_plural = 'Фото кружков'
 
 
+class Schedul(models.Model):  # Рекомендуется переименовать в Schedule
+    AGE_GROUP_CHOICES = [
+        ('adults', 'Взрослые'),
+        ('teens', 'Подростки'),
+        ('kids', 'Дети'),
+    ]
+
+    DAYS_OF_WEEK = [
+        ('monday', 'Понедельник'),
+        ('tuesday', 'Вторник'),
+        ('wednesday', 'Среда'),
+        ('thursday', 'Четверг'),
+        ('friday', 'Пятница'),
+        ('saturday', 'Суббота'),
+        ('sunday', 'Воскресенье'),
+    ]
+
+    circle = models.ForeignKey(Circle, related_name='schedules', on_delete=models.CASCADE, verbose_name='Кружок')
+    age_group = models.CharField(verbose_name='Возрастная группа', max_length=10, choices=AGE_GROUP_CHOICES)
+    day_of_week = models.CharField(verbose_name='День недели', max_length=10, choices=DAYS_OF_WEEK)
+    start_time = models.TimeField(verbose_name='Начало занятий')
+    end_time = models.TimeField(verbose_name='Конец занятий')
+
+    def __str__(self):
+        return f'{self.circle.title} ({self.age_group}) - {self.day_of_week}'
+
+    class Meta:
+        verbose_name = 'Расписание'
+        verbose_name_plural = 'Расписания'
+
 class Trainer(models.Model):
     SPORT_CHOICES = [
         ('basketball', 'Баскетбол'),
         ('football', 'Футбол'),
         ('volleyball', 'Волейбол'),
-        ('tennis', 'Тенис'),
+        ('tennis', 'Теннис'),
         ('boxing', 'Бокс'),
         ('cycling', 'Велоспорт'),
         ('taekwondo', 'Таэквондо'),
@@ -131,26 +166,31 @@ class Trainer(models.Model):
         ('yoga', 'Йога'),
     ]
 
-    first_name = models.CharField('Имя', max_length=100)
-    last_name = models.CharField('Фамилия', max_length=100)
-    email = models.EmailField('Email', unique=True)
-    phone = models.CharField('Телефон', max_length=20)
-    sport = models.CharField('Спорт', max_length=20, choices=SPORT_CHOICES)
+    first_name = models.CharField(verbose_name='Имя', max_length=255)
+    last_name = models.CharField(verbose_name='Фамилия', max_length=255)
+    email = models.EmailField(verbose_name='Электронная почта')
+    phone = models.CharField(verbose_name='Телефон', max_length=20)
+    sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
 
-    def str(self):
+    def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
     class Meta:
         verbose_name = 'Тренер'
         verbose_name_plural = 'Тренеры'
 
-
 class Client(models.Model):
+    PAYMENT_METHOD_CHOICES = [
+        ('cash', 'Наличные'),
+        ('card', 'Карта'),
+        ('transfer', 'Перевод'),
+    ]
+
     SPORT_CHOICES = [
         ('basketball', 'Баскетбол'),
         ('football', 'Футбол'),
         ('volleyball', 'Волейбол'),
-        ('tennis', 'Тенис'),
+        ('tennis', 'Теннис'),
         ('boxing', 'Бокс'),
         ('cycling', 'Велоспорт'),
         ('taekwondo', 'Таэквондо'),
@@ -158,18 +198,12 @@ class Client(models.Model):
         ('yoga', 'Йога'),
     ]
 
-    PAYMENT_CHOICES = [
-        ('cash', 'Наличные'),
-        ('card', 'Карта'),
-        ('transfer', 'Перевод'),
-    ]
+    name = models.CharField(verbose_name='Имя', max_length=255)
+    trainer = models.ForeignKey(Trainer, related_name='clients', on_delete=models.CASCADE, verbose_name='Тренер')
+    sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
+    payment_method = models.CharField(verbose_name='Метод оплаты', max_length=10, choices=PAYMENT_METHOD_CHOICES)
 
-    name = models.CharField('Имя', max_length=100)
-    trainer = models.ForeignKey(Trainer, related_name='clients', on_delete=models.CASCADE)
-    sport = models.CharField('Спорт', max_length=20, choices=SPORT_CHOICES)
-    payment = models.CharField('Оплата', max_length=20, choices=PAYMENT_CHOICES)
-
-    def str(self):
+    def __str__(self):
         return self.name
 
     class Meta:
