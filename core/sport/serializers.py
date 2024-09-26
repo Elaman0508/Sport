@@ -38,28 +38,25 @@ class HallSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
 class ClubImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubImage
         fields = ['id', 'image']
 
-
 class ClubAdditionalInfoSerializer(serializers.ModelSerializer):
-    sport = filters.CharFilter(field_name='sport', lookup_expr='exact')
     class Meta:
         model = ClubAdditionalInfo
-        fields = '__all__'
-
+        fields = '__all__'  # Возвращаем все поля
 
 class ClubSerializer(serializers.ModelSerializer):
     images = ClubImageSerializer(many=True, read_only=True)
     additional_info = ClubAdditionalInfoSerializer(many=True, read_only=True)
-    sport = filters.CharFilter(field_name='sport', lookup_expr='exact')
+    sport = filters.CharFilter(field_name='sport', lookup_expr='exact')  # Применяем фильтр на sport
 
     class Meta:
         model = Club
         fields = '__all__'
-
 
 class ReviewSerializer(serializers.ModelSerializer):
     sport = filters.CharFilter(field_name='sport', lookup_expr='exact')

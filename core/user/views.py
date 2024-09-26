@@ -188,7 +188,6 @@ class UserLoginView(generics.CreateAPIView):
             'token': token.key
         }, status=status.HTTP_200_OK)
 
-
 class RegistrationMessageAPIView(APIView):
     """Возвращает сообщение о необходимости регистрации для размещения рекламы."""
 

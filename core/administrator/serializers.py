@@ -6,19 +6,11 @@ class HallImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = HallImage
         fields = '__all__'
-        ref_name = 'HallImageSerializer'  # Add ref_name
-
-
-class ScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Schedule
-        fields = '__all__'
-        ref_name = 'ScheduleSerializer'  # Add ref_name
+        ref_name = 'HallImageSerializer'  # Add ref_name # Add ref_name
 
 
 class HallSerializer(serializers.ModelSerializer):
     images = HallImageSerializer(many=True, read_only=True)
-    schedule = ScheduleSerializer(many=True, read_only=True)
 
     class Meta:
         model = Hall
@@ -33,16 +25,8 @@ class CircleImageSerializer(serializers.ModelSerializer):
         ref_name = 'CircleImageSerializer'  # Add ref_name
 
 
-class SchedulSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Schedul
-        fields = '__all__'
-        ref_name = 'SchedulSerializer'  # Add ref_name
-
-
 class CircleSerializer(serializers.ModelSerializer):
     circle_images = CircleImageSerializer(many=True, read_only=True)
-    schedul = SchedulSerializer(many=True, read_only=True)
 
     class Meta:
         model = Circle

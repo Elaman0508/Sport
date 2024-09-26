@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 SPORT_CHOICES = [
     ('basketball', 'Баскетбол'),
     ('football', 'Футбол'),
+
     ('tennis', 'Теннис'),
     ('swimming', 'Плавание'),
     ('volleyball', 'Волейбол'),
@@ -70,7 +71,7 @@ class HallArena(models.Model):
 
 
 class Club(models.Model):
-    sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name='clubs')  # Added related_name
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name='clubs')
     title = models.CharField(max_length=255, unique=True, verbose_name='Название клуба')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='club_images/', verbose_name='Изображение', blank=True, null=True)
@@ -79,36 +80,28 @@ class Club(models.Model):
         verbose_name = 'Клуб'
         verbose_name_plural = 'Клубы'
 
-    def __str__(self):
-        return self.title
-
-    def get_training_schedules(self):
-        return TrainingSchedule.objects.filter(sport=self.sport)
-
-    def get_additional_info(self):
-        return self.additional_info.all()  # New method to get related additional info
-
 class ClubAdditionalInfo(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, verbose_name='Клуб')
+    club = models.ForeignKey(Club, related_name='additional_info', verbose_name='Клуб', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Название')
-    title3 = models.CharField(max_length=255, verbose_name='Название')
-    description = models.TextField(verbose_name='Описание')
     title1 = models.CharField(max_length=255, verbose_name='Название')
     description1 = models.TextField(verbose_name='Описание')
     title2 = models.CharField(max_length=255, verbose_name='Название')
     description2 = models.TextField(verbose_name='Описание')
+    title3 = models.CharField(max_length=255, verbose_name='Название')
+    description3 = models.TextField(verbose_name='Описание')
     video_link = models.URLField(max_length=500, verbose_name='Ссылка на видео', blank=True, null=True)
     address = models.CharField(max_length=255, verbose_name='Адрес', blank=True, null=True)
     phone = models.CharField(max_length=20, verbose_name='Телефон', blank=True, null=True)
 
     class Meta:
-        verbose_name = 'клубе'
-        verbose_name_plural = 'клубах'
+        verbose_name = 'Дополнительная информация о клубе'
+        verbose_name_plural = 'Дополнительные информации о клубах'
 
     def __str__(self):
-        return self.title
+        return self.title1
 
 
+# Модель Изображения Клуба
 class ClubImage(models.Model):
     club = models.ForeignKey(Club, related_name='images', on_delete=models.CASCADE, verbose_name='Клуб')
     additional_info = models.ForeignKey(ClubAdditionalInfo, related_name='images', on_delete=models.CASCADE, verbose_name='Дополнительная информация', null=True, blank=True)
@@ -117,9 +110,6 @@ class ClubImage(models.Model):
     class Meta:
         verbose_name = 'Изображение клуба'
         verbose_name_plural = 'Изображения клубов'
-
-    def __str__(self):
-        return f'Изображение клуба {self.club.title}'
 
 
 # Модель Отзыва

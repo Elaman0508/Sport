@@ -49,11 +49,10 @@ class ClubAdmin(admin.ModelAdmin):
     inlines = [ClubImageInline]
 
 admin.site.register(Club, ClubAdmin)
-
 @admin.register(ClubAdditionalInfo)
 class ClubAdditionalInfoAdmin(admin.ModelAdmin):
-    list_display = ('club', 'title', 'title1', 'title2')  # Используйте поля, которые существуют в модели
-    fields = ('club', 'title', 'title1', 'title2', 'description', 'description1', 'description2', 'video_link', 'address', 'phone')
+    list_display = ('club', 'title', 'title1', 'description1')  # Corrected to use 'description1'
+    fields = ('club', 'title', 'title1', 'description1', 'title2', 'description2', 'title3', 'description3', 'video_link', 'address', 'phone')  # Ensure all necessary fields are included
     inlines = [ClubImageInline]
 
 
