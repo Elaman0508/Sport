@@ -1,5 +1,6 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
-
+from django.conf import settings
 class Hall(models.Model):
     SPORT_CHOICES = [
         ('basketball', 'Баскетбол'),
@@ -12,32 +13,21 @@ class Hall(models.Model):
         ('swimming', 'Плавание'),
         ('yoga', 'Йога'),
     ]
-    DAYS_OF_WEEK = [
-        ('monday', 'Понедельник'),
-        ('tuesday', 'Вторник'),
-        ('wednesday', 'Среда'),
-        ('thursday', 'Четверг'),
-        ('friday', 'Пятница'),
-        ('saturday', 'Суббота'),
-        ('sunday', 'Воскресенье'),
-    ]
+    sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
+    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
     title = models.CharField(verbose_name='Заголовок', max_length=255)
+    description = models.TextField(verbose_name='Описание')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
     address = models.CharField(verbose_name='Адрес', max_length=255)
-    description = models.TextField(verbose_name='Описание')
-    sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
-    size = models.CharField(verbose_name='Размеры зала', max_length=50)
-    quantity = models.IntegerField(verbose_name='Количество')
-    hall_type = models.CharField(verbose_name='Тип', max_length=100)
-    coverage = models.CharField(verbose_name='Покрытие', max_length=100)
-    inventory = models.TextField(verbose_name='Инвентарь')
-    hourly_rate = models.DecimalField(verbose_name='Оплата за час', max_digits=10, decimal_places=2)
-    dressing_room = models.BooleanField(verbose_name='Раздевалка', default=False)
-    lighting = models.BooleanField(verbose_name='Освещение', default=False)
-    shower = models.BooleanField(verbose_name='Душевая', default=False)
-    day_of_week = models.CharField(verbose_name='День недели', max_length=10, choices=DAYS_OF_WEEK)
-    start_time = models.TimeField(verbose_name='Начало работы')
-    end_time = models.TimeField(verbose_name='Конец работы')
+    size = models.CharField(verbose_name='Размеры', max_length=50)  # Размеры зала
+    inventory = models.TextField(verbose_name='Инвентарь')  # Описание инвентаря
+    price_per_hour = models.DecimalField(verbose_name='Оплата за час', max_digits=10, decimal_places=2)  # Цена за час
+    quantity = models.IntegerField(verbose_name='Количество')  # Количество мест
+    coverage = models.CharField(verbose_name='Покрытие', max_length=100)  # Покрытие
+    hall_type = models.CharField(verbose_name='Тип', max_length=100)  # Тип зала
+    shower = models.BooleanField(default=False, verbose_name='Душевая')  # Душевая
+    lighting = models.BooleanField(default=False, verbose_name='Освещение')  # Освещение
+    dressing_room = models.BooleanField(default=False, verbose_name='Раздевалка')  # Раздевалка
 
     def __str__(self):
         return self.title
@@ -45,21 +35,40 @@ class Hall(models.Model):
     class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
-
+#
 
 class HallImage(models.Model):
     hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
     image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
-    description = models.CharField(max_length=255, blank=True, verbose_name='Описание изображения')  # Дополнительное поле для описания
-
-    def __str__(self):
-        return f'Изображение зала {self.hall.title}'
 
     class Meta:
         verbose_name = 'Изображение зала'
         verbose_name_plural = 'Изображения залов'
 
+class WorkSchedule(models.Model):
+    day_of_week = models.CharField(max_length=12, choices=[
+        ('Понедельник', 'Понедельник'),
+        ('Вторник', 'Вторник'),
+        ('Среда', 'Среда'),
+        ('Четверг', 'Четверг'),
+        ('Пятница', 'Пятница'),
+        ('Суббота', 'Суббота'),
+        ('Воскресенье', 'Воскресенье'),
+    ])
+    opening_time = models.TimeField()
+    closing_time = models.TimeField()
 
+    class Meta:
+        unique_together = ('day_of_week', 'opening_time')
+
+    def __str__(self):
+        return f"{self.day_of_week}: {self.opening_time} - {self.closing_time}"
+
+    class Meta:
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"
+
+#зал
 class Circle(models.Model):
     SPORT_CHOICES = [
         ('basketball', 'Баскетбол'),
@@ -72,41 +81,19 @@ class Circle(models.Model):
         ('swimming', 'Плавание'),
         ('yoga', 'Йога'),
     ]
-    AGE_GROUP_CHOICES = [
-        ('adults', 'Взрослые'),
-        ('teens', 'Подростки'),
-        ('kids', 'Дети'),
-    ]
-
-    DAYS_OF_WEEK = [
-        ('monday', 'Понедельник'),
-        ('tuesday', 'Вторник'),
-        ('wednesday', 'Среда'),
-        ('thursday', 'Четверг'),
-        ('friday', 'Пятница'),
-        ('saturday', 'Суббота'),
-        ('sunday', 'Воскресенье'),
-    ]
-
     title = models.CharField(verbose_name='Заголовок', max_length=255)
+    image = models.ImageField(upload_to='circle_images/', verbose_name='Фото')
+    sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
+    header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
+    description1 = models.TextField(verbose_name='Описание 1', blank=True)
     phone = models.CharField(verbose_name='Телефон', max_length=20)
     address = models.CharField(verbose_name='Адрес', max_length=255)
-    sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
-    images = models.ManyToManyField('CircleImage', verbose_name='Фото', blank=True, related_name='circles')
-
-    # Поля для заголовков и описаний
-    header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     header2 = models.CharField(verbose_name='Заголовок 2', max_length=255, blank=True)
-    header3 = models.CharField(verbose_name='Заголовок 3', max_length=255, blank=True)
-    header4 = models.CharField(verbose_name='Заголовок 4', max_length=255, blank=True)
-    description1 = models.TextField(verbose_name='Описание 1', blank=True)
     description2 = models.TextField(verbose_name='Описание 2', blank=True)
+    header3 = models.CharField(verbose_name='Заголовок 3', max_length=255, blank=True)
     description3 = models.TextField(verbose_name='Описание 3', blank=True)
+    header4 = models.CharField(verbose_name='Заголовок 4', max_length=255, blank=True)
     description4 = models.TextField(verbose_name='Описание 4', blank=True)
-    age_group = models.CharField(verbose_name='Возрастная группа', max_length=10, choices=AGE_GROUP_CHOICES)
-    day_of_week = models.CharField(verbose_name='День недели', max_length=10, choices=DAYS_OF_WEEK)
-    start_time = models.TimeField(verbose_name='Начало занятий')
-    end_time = models.TimeField(verbose_name='Конец занятий')
     def __str__(self):
         return self.title
 
@@ -127,6 +114,33 @@ class CircleImage(models.Model):
         verbose_name = 'Фото кружка'
         verbose_name_plural = 'Фото кружков'
 
+class Schedul(models.Model):
+    CATEGORY_CHOICES = (
+        ('adults', 'Взрослые'),
+        ('teens', 'Подростки'),
+        ('kids', 'Дети'),
+    )
+
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
+    day_of_week = models.CharField(max_length=15, verbose_name="День недели")
+    start_time = models.TimeField(verbose_name="Начало занятия")
+    end_time = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
+    category1 = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
+    day_of_week1 = models.CharField(max_length=15, verbose_name="День недели")
+    start_time1 = models.TimeField(verbose_name="Начало занятия")
+    end_time1 = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
+    category2 = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
+    day_of_week2 = models.CharField(max_length=15, verbose_name="День недели")
+    start_time2 = models.TimeField(verbose_name="Начало занятия")
+    end_time2 = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
+    class Meta:
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"
+
+    def __str__(self):
+        return f'{self.get_category_display()} - {self.day_of_week}'
+
+#
 class Trainer(models.Model):
     SPORT_CHOICES = [
         ('basketball', 'Баскетбол'),
@@ -144,8 +158,8 @@ class Trainer(models.Model):
     last_name = models.CharField(verbose_name='Фамилия', max_length=255)
     email = models.EmailField(verbose_name='Электронная почта')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
+    photo = models.ImageField(verbose_name='Фото', upload_to='trainers_photos/', blank=True, null=True)
     sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
-
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
@@ -183,3 +197,76 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+
+class Advertisement(models.Model):
+    title = models.CharField(max_length=255, verbose_name="Заголовок")
+    photo = models.ImageField(
+        upload_to='photos/',
+        blank=True,
+        null=True,
+        verbose_name="Изображение",
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'gif', 'webp'])]
+    )
+    file = models.FileField(
+        upload_to='files/',
+        blank=True,
+        null=True,
+        verbose_name="Медиафайл",
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'gif', 'webp', 'mp3', 'mp4'])]
+    )
+    title1 = models.CharField(max_length=255, verbose_name="Дополнительный заголовок")
+    description1 = models.TextField(verbose_name='Описание 1', blank=True)
+    phone = models.CharField(verbose_name='Телефон', max_length=20)
+    address = models.CharField(verbose_name='Адрес', max_length=255)
+    site_name = models.CharField(max_length=255, verbose_name="Название сайта", blank=True)
+    site_link = models.URLField(max_length=200, verbose_name="Ссылка на сайт", blank=True)
+    installment_plan = models.CharField(max_length=50, verbose_name="Рассрочка", help_text="6/9/12 месяцев", blank=True)
+
+    class Meta:
+        verbose_name = "реклама"
+        verbose_name_plural = "реклама"
+
+    def __str__(self):
+        return self.title
+
+class Schedule(models.Model):
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE, related_name='schedules')
+    day_of_week = models.CharField(max_length=10, verbose_name="День недели")
+    start_time = models.TimeField(verbose_name="Начало работы")
+    end_time = models.TimeField(verbose_name="Конец работы")
+    is_active = models.BooleanField(default=True, verbose_name="Активно")  # Поле для активации расписания
+
+    class Meta:
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"
+
+    def __str__(self):
+        return f"{self.day_of_week} ({self.start_time} - {self.end_time})"
+
+
+class Review(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Имя")
+    comment = models.TextField(verbose_name="Комментарий", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    rating = models.PositiveIntegerField(verbose_name="Рейтинг", default=0)
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
+        ordering = ['-created_at']  # Сортировка по дате создания (последние отзывы первыми)
+
+    def __str__(self):
+        return f"{self.name}: {self.comment[:20]}"
+
+class Payment(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Имя")
+    sport = models.CharField(max_length=50, verbose_name="Спорт")
+    monthly_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за месяц")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")  # Убедитесь, что это поле есть
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
+
+    def __str__(self):
+        return f"{self.name} - {self.sport} - {self.monthly_price} руб."

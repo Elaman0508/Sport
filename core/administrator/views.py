@@ -1,10 +1,13 @@
-from rest_framework import generics, status
-from rest_framework.parsers import MultiPartParser, FormParser
+import stripe
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, status, viewsets
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from .models import Hall, Circle
+from rest_framework.views import APIView
+from .models import *
 from .serializers import *
-
+# hall
 class HallListCreateView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
@@ -13,7 +16,15 @@ class HallListCreateView(generics.ListCreateAPIView):
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer # Support for file uploads
+#WorkSchedule
+class WorkScheduleListCreateView(generics.ListCreateAPIView):
+    queryset = WorkSchedule.objects.all()
+    serializer_class = WorkScheduleSerializer
 
+class WorkScheduleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = WorkSchedule.objects.all()
+    serializer_class = WorkScheduleSerializer
+#Circle
 class CircleListCreateView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
@@ -21,6 +32,33 @@ class CircleListCreateView(generics.ListCreateAPIView):
 class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
+
+#Schedul
+class SchedulListCreateView(generics.ListCreateAPIView):
+    queryset = Schedule.objects.all()
+    serializer_class = SchedulSerializer
+
+    def create(self, request, *args, **kwargs):
+        schedules_data = request.data  # Получаем данные из запроса
+        serializer = SchedulSerializer(data=schedules_data, many=True)  # Указываем many=True для массового создания
+        serializer.is_valid(raise_exception=True)  # Проверяем данные на валидность
+        serializer.save()  # Сохраняем все объекты
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class SchedulRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Schedule.objects.all()
+    serializer_class = SchedulSerializer
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+
+
 class UserLoginView(generics.CreateAPIView):
     """User authentication."""
     serializer_class = UserLoginSerializer
@@ -37,22 +75,15 @@ class UserLoginView(generics.CreateAPIView):
             'response': True,
             'token': token.key
         }, status=status.HTTP_200_OK)
-
-        # The following return would be unnecessary because of `is_valid(raise_exception=True)`
-        # However, if you want to keep the validation, you can use the serializer's errors:
-        # return Response({
-        #     'response': False,
-        #     'message': serializer.errors
-        # }, status=status.HTTP_400_BAD_REQUEST)
-class TrainerListCreateView(generics.ListCreateAPIView):
+#Trainer
+class TrainerCreateView(generics.ListCreateAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
-
 # View for retrieving, updating, and deleting a specific Trainer
 class TrainerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
-
+#client
 # View for listing and creating Clients
 class ClientListCreateView(generics.ListCreateAPIView):
     queryset = Client.objects.all()
@@ -62,3 +93,36 @@ class ClientListCreateView(generics.ListCreateAPIView):
 class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+#Advertisement
+class AdvertisementListCreateView(generics.ListCreateAPIView):
+    queryset = Advertisement.objects.all()
+    serializer_class = AdvertisementSerializer
+
+# Представление для получения, обновления и удаления одного объявления
+class AdvertisementRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Advertisement.objects.all()
+    serializer_class = AdvertisementSerializer
+#Schedule
+# Представление для списка и создания расписаний
+class ScheduleListCreateView(generics.ListCreateAPIView):
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+
+# Представление для получения, обновления и удаления одного расписания
+class ScheduleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+#отзыв
+class ReviewListCreateView(generics.ListCreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+# Представление для получения, обновления и удаления одного отзыва
+class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+#платеж
+# Представление для списка и создания платежей
+class PaymentListCreateView(generics.ListAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import *
@@ -6,17 +8,20 @@ class HallImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = HallImage
         fields = '__all__'
-        ref_name = 'HallImageSerializer'  # Add ref_name # Add ref_name
-
+        ref_name = 'HallImageSerializer'  # Добавлено ref_name
 
 class HallSerializer(serializers.ModelSerializer):
-    images = HallImageSerializer(many=True, read_only=True)
+    hall_images = HallImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Hall
         fields = '__all__'
-        ref_name = 'HallSerializer'  # Add ref_name
+        ref_name = 'HallSerializer'  # Задайте уникальное имя
 
+class WorkScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkSchedule
+        fields = '__all__'
 
 class CircleImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,7 +36,13 @@ class CircleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Circle
         fields = '__all__'
-        ref_name = 'CircleSerializer'  # Add ref_name
+        ref_name = 'CircleSerializer'
+
+class SchedulSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedul
+        fields = '__all__'
+
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
@@ -52,7 +63,7 @@ class UserLoginSerializer(serializers.Serializer):
 class TrainerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trainer
-        fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'sport']  # Include the fields you want to expose
+        fields = '__all__'
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,3 +78,27 @@ class ClientSerializer(serializers.ModelSerializer):
             'name': f"{instance.trainer.first_name} {instance.trainer.last_name}",
         }
         return representation
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = ['day_of_week', 'start_time', 'end_time','is_active']
+
+class AdvertisementSerializer(serializers.ModelSerializer):
+    schedules = ScheduleSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Advertisement
+        fields = ['title', 'photo', 'file', 'title1', 'description1', 'phone', 'address', 'site_name', 'site_link', 'installment_plan', 'schedules']
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'name', 'comment', 'created_at', 'rating']
+        ref_name = 'SportReviewSerializer'  # Уникальное имя для Swagger
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['id', 'name', 'sport', 'monthly_price', 'created_at']  # Убедитесь, что поле создано
+        read_only_fields = ['created_at']

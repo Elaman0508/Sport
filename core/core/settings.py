@@ -96,6 +96,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+APPEND_SLASH = False
 
 
 # Password validation
@@ -159,6 +160,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kamiltaalaibekkyzy@gmail.com'
-EMAIL_HOST_PASSWORD = 'nskpxwpqtawdtvnw'
+EMAIL_HOST_PASSWORD = 'nimhoxyhhkbqocmb '
 # settings.py
 BASE_URL = 'http://127.0.0.1:8000/admin/'
+
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51Ps1IcKVaMgv7sI2ZURWU7rW2r56h7h8afp26AVBis7KAUk7YPdosHUwBwdKqSgSg1t3Kd2U2pV4BA6s8ducs2Ey00H3WqY3Pu'
+STRIPE_SECRET_KEY = 'sk_test_51Ps1IcKVaMgv7sI2c7NPQmbbJuZTdEp3akB14GZ6TuToURlTsI0aeKmX6GcPr70ACIwsYxR3psipEnt16AK1gD6s006x45h1br'

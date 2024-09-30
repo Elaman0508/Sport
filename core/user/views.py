@@ -13,12 +13,13 @@ from django.utils.translation import gettext_lazy as _
 from django.db import IntegrityError
 import logging
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .models import CustomUser
 from .serializers import UserRegistrationSerializer, ActivationCodeSerializer, UserLoginSerializer, \
-    RegistrationMessageSerializer, ResetPasswordVerifySerializer, ResetPasswordSerializer
+    RegistrationMessageSerializer, ResetPasswordVerifySerializer, ResetPasswordSerializer, \
+    ResendActivationCodeSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +30,9 @@ def generate_activation_code():
 
 
 def validate_password(password):
-    """Проверка пароля на минимум 8 символов, наличие заглавной буквы, цифры и строчной буквы."""
-    if len(password) < 8:
-        return False, _('Пароль должен быть не менее 8 символов.')
+    """Проверка пароля на минимум 5 символов, максимум 10, наличие заглавной буквы, цифры и строчной буквы."""
+    if len(password) < 5 or len(password) > 10:
+        return False, _('Пароль должен быть от 5 до 10 символов.')
     if not re.search(r'[A-Z]', password):
         return False, _('Пароль должен содержать хотя бы одну заглавную букву.')
     if not re.search(r'[a-z]', password):
@@ -39,7 +40,6 @@ def validate_password(password):
     if not re.search(r'[0-9]', password):
         return False, _('Пароль должен содержать хотя бы одну цифру.')
     return True, ''
-
 
 class RegistrationAPIView(generics.CreateAPIView):
     """Регистрация нового пользователя."""
@@ -275,3 +275,17 @@ class ResetPasswordVerifyView(generics.GenericAPIView):
                 'response': False,
                 'message': _('Произошла ошибка при сбросе пароля.')
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class ResendActivationCodeView(generics.GenericAPIView):
+    serializer_class = ResendActivationCodeSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)  # Это автоматически вернет 400 с ошибками, если данные не валидны
+        user = serializer.validated_data['user']
+
+        # Здесь код для отправки активационного кода пользователю
+        try:
+            # send_activation_code(user)  # Ваша функция для отправки кода
+            return Response({'detail': 'Активационный код успешно отправлен.'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
