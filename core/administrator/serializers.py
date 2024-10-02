@@ -29,7 +29,7 @@ class CircleImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
         ref_name = 'CircleImageSerializer'  # Add ref_name
 
-
+#Кружки
 class CircleSerializer(serializers.ModelSerializer):
     circle_images = CircleImageSerializer(many=True, read_only=True)
 
@@ -42,7 +42,7 @@ class SchedulSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedul
         fields = '__all__'
-
+#login
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
@@ -59,12 +59,12 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Неверный логин или пароль.")
         return {'user': user}
 
-
+#Тренеры
 class TrainerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trainer
         fields = '__all__'
-
+#Клиенты
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
@@ -78,18 +78,18 @@ class ClientSerializer(serializers.ModelSerializer):
             'name': f"{instance.trainer.first_name} {instance.trainer.last_name}",
         }
         return representation
-
-class ScheduleSerializer(serializers.ModelSerializer):
+#реклама
+class ScheduleadverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = ['day_of_week', 'start_time', 'end_time','is_active']
 
 class AdvertisementSerializer(serializers.ModelSerializer):
-    schedules = ScheduleSerializer(many=True, read_only=True)
+    schedules = ScheduleadverSerializer(many=True, read_only=True)
 
     class Meta:
         model = Advertisement
-        fields = ['title', 'photo', 'file', 'title1', 'description1', 'phone', 'address', 'site_name', 'site_link', 'installment_plan', 'schedules']
+        fields = ['id','title', 'photo', 'title1', 'description1', 'phone', 'address', 'site_name', 'site_link', 'installment_plan', 'schedules']
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

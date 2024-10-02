@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'sport',
     'corsheaders',
     'django_filters',
+    'client_account',
+    'user_main',
 ]
 
 MIDDLEWARE = [

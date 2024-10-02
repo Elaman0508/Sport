@@ -23,7 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/',include('user.urls')),
     path('administrator/',include('administrator.urls')),
-    path('sport/',include('sport.urls'))
+    path('sport/',include('sport.urls')),
+    path('client/',include('client_account.urls')),
+    path('user_main/',include('user_main.urls')),
 
 ]
 urlpatterns += yasg_urls

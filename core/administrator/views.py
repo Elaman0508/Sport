@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from .models import *
+from rest_framework.exceptions import PermissionDenied
 from .serializers import *
 # hall
 class HallListCreateView(generics.ListCreateAPIView):
@@ -24,7 +25,7 @@ class WorkScheduleListCreateView(generics.ListCreateAPIView):
 class WorkScheduleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = WorkSchedule.objects.all()
     serializer_class = WorkScheduleSerializer
-#Circle
+#Кружки
 class CircleListCreateView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
@@ -58,15 +59,19 @@ class SchedulRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
-
+#login
 class UserLoginView(generics.CreateAPIView):
-    """User authentication."""
+    """User authentication for administrators only."""
     serializer_class = UserLoginSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data.get('user')
+
+        # Check if the user is an administrator
+        if not user.is_staff and not user.is_superuser:
+            raise PermissionDenied("Only administrators can log in.")
 
         # Token creation
         token, created = Token.objects.get_or_create(user=user)
@@ -93,6 +98,7 @@ class ClientListCreateView(generics.ListCreateAPIView):
 class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+
 #Advertisement
 class AdvertisementListCreateView(generics.ListCreateAPIView):
     queryset = Advertisement.objects.all()
@@ -104,14 +110,14 @@ class AdvertisementRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVi
     serializer_class = AdvertisementSerializer
 #Schedule
 # Представление для списка и создания расписаний
-class ScheduleListCreateView(generics.ListCreateAPIView):
+class ScheduleadverListCreateView(generics.ListCreateAPIView):
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerializer
+    serializer_class = ScheduleadverSerializer
 
 # Представление для получения, обновления и удаления одного расписания
-class ScheduleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class ScheduleadverRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerializer
+    serializer_class = ScheduleadverSerializer
 #отзыв
 class ReviewListCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()

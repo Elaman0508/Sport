@@ -14,7 +14,7 @@ class HallAdmin(admin.ModelAdmin):
     inlines = [HallImageInline]
 
 class WorkScheduleAdmin(admin.ModelAdmin):
-    list_display = ('day_of_week', 'opening_time', 'closing_time')
+    list_display = ('day_of_week', 'opening_time', 'closing_time','is_active')
     list_filter = ('day_of_week',)
     search_fields = ('day_of_week',)
 
