@@ -72,21 +72,18 @@ class ClientAdmin(admin.ModelAdmin):
     list_filter = ('sport', 'trainer')
     ordering = ('name',)  # Use 'name' for ordering
 
+
 @admin.register(Advertisement)
 class AdvertisementAdmin(admin.ModelAdmin):
-    list_display = ('title', 'phone', 'address')
-    search_fields = ('title', 'phone')
-
-@admin.register(Schedule)
-class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('advertisement', 'day_of_week', 'start_time', 'end_time','is_active')
-    list_filter = ('day_of_week',)
+    list_display = ('title', 'phone', 'address', 'site_name')  # Отображаемые поля в админке
+    search_fields = ('title', 'phone', 'address', 'site_name')  # Поля для поиска
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_at', 'rating')
     search_fields = ('name', 'comment')
     list_filter = ('rating', 'created_at')
+
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('name', 'sport', 'monthly_price', 'created_at')

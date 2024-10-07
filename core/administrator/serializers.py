@@ -79,18 +79,11 @@ class ClientSerializer(serializers.ModelSerializer):
         }
         return representation
 #реклама
-class ScheduleadverSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Schedule
-        fields = ['day_of_week', 'start_time', 'end_time','is_active']
-
 class AdvertisementSerializer(serializers.ModelSerializer):
-    schedules = ScheduleadverSerializer(many=True, read_only=True)
-
+    file = serializers.FileField(required=True)  # Убедитесь, что поле правильно объявлено
     class Meta:
         model = Advertisement
-        fields = ['id','title', 'photo', 'title1', 'description1', 'phone', 'address', 'site_name', 'site_link', 'installment_plan', 'schedules']
-
+        fields = '__all__'
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review

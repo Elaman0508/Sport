@@ -2,6 +2,7 @@ import stripe
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status, viewsets
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -12,6 +13,7 @@ from .serializers import *
 class HallListCreateView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
+    parser_classes = [MultiPartParser]
   # Support for file uploads
 
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -29,6 +31,7 @@ class WorkScheduleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVie
 class CircleListCreateView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
+    parser_classes = [MultiPartParser]
 
 class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Circle.objects.all()
@@ -36,7 +39,7 @@ class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 #Schedul
 class SchedulListCreateView(generics.ListCreateAPIView):
-    queryset = Schedule.objects.all()
+    queryset = Schedul.objects.all()
     serializer_class = SchedulSerializer
 
     def create(self, request, *args, **kwargs):
@@ -47,7 +50,7 @@ class SchedulListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class SchedulRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Schedule.objects.all()
+    queryset = Schedul.objects.all()
     serializer_class = SchedulSerializer
 
     def get(self, request, *args, **kwargs):
@@ -84,6 +87,7 @@ class UserLoginView(generics.CreateAPIView):
 class TrainerCreateView(generics.ListCreateAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
+    parser_classes = [MultiPartParser]
 # View for retrieving, updating, and deleting a specific Trainer
 class TrainerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Trainer.objects.all()
@@ -93,6 +97,7 @@ class TrainerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class ClientListCreateView(generics.ListCreateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+    parser_classes = [MultiPartParser]
 
 # View for retrieving, updating, and deleting a specific Client
 class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -103,22 +108,17 @@ class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class AdvertisementListCreateView(generics.ListCreateAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
+    parser_classes = [MultiPartParser]  # Обработка файлов
+    #
+    # def perform_create(self, serializer):
+    #     serializer.save()  # Сохраняем объявление, включая поле photo
 
-# Представление для получения, обновления и удаления одного объявления
 class AdvertisementRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-#Schedule
-# Представление для списка и создания расписаний
-class ScheduleadverListCreateView(generics.ListCreateAPIView):
-    queryset = Schedule.objects.all()
-    serializer_class = ScheduleadverSerializer
 
-# Представление для получения, обновления и удаления одного расписания
-class ScheduleadverRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Schedule.objects.all()
-    serializer_class = ScheduleadverSerializer
-#отзыв
+#Schedule
+
 class ReviewListCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer

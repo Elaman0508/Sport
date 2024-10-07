@@ -63,6 +63,7 @@ class UserLoginSerializer(serializers.Serializer):
 
 class RegistrationMessageSerializer(serializers.Serializer):
     message = serializers.CharField()
+
 class ResetPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
@@ -70,20 +71,5 @@ class ResetPasswordSerializer(serializers.Serializer):
 class ResetPasswordVerifySerializer(serializers.Serializer):
     reset_code = serializers.CharField(max_length=100)
 
-
 class ResendActivationCodeSerializer(serializers.Serializer):
     email = serializers.EmailField()
-
-    def validate_email(self, value):
-        User = get_user_model()
-        try:
-            user = User.objects.get(email=value)
-            if not user.is_active:
-                return user
-            raise serializers.ValidationError('Пользователь уже активирован.')
-        except User.DoesNotExist:
-            raise serializers.ValidationError('Пользователь с данным email не найден.')
-
-    def create(self, validated_data):
-        # Здесь можно добавить дополнительную логику, если необходимо
-        return validated_data

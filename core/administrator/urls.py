@@ -29,10 +29,7 @@ urlpatterns = [
     path('advertisements/', AdvertisementListCreateView.as_view(), name='advertisement-list-create'),
     # URL для получения, обновления и удаления одного объявления
     path('advertisements/<int:pk>/', AdvertisementRetrieveUpdateDestroyView.as_view(), name='advertisement-detail'),
-    # URL для списка и создания расписаний
-    path('schedules/', ScheduleadverListCreateView.as_view(), name='schedule-list-create'),
-    # URL для получения, обновления и удаления одного расписания
-    path('schedules/<int:pk>/', ScheduleadverRetrieveUpdateDestroyView.as_view(), name='schedule-detail'),
+
     path('reviews/', ReviewListCreateView.as_view(), name='review-list-create'),
 
     # URL для получения, обновления и удаления одного отзыва

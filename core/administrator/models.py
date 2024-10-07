@@ -188,38 +188,26 @@ class Client(models.Model):
         verbose_name_plural = 'Клиенты'
 #реклама
 class Advertisement(models.Model):
-    title = models.CharField(max_length=255, verbose_name="Заголовок")
-    photo = models.ImageField(
-        upload_to='photos/',
-        blank=True,
-        null=True,
-        verbose_name="Изображение",
-    )
-    title1 = models.CharField(max_length=255, verbose_name="Дополнительный заголовок")
-    description1 = models.TextField(verbose_name='Описание 1', blank=True)
-    phone = models.CharField(verbose_name='Телефон', max_length=20)
-    address = models.CharField(verbose_name='Адрес', max_length=255)
-    site_name = models.CharField(max_length=255, verbose_name="Название сайта", blank=True)
-    site_link = models.URLField(max_length=200, verbose_name="Ссылка на сайт", blank=True)
-    installment_plan = models.CharField(max_length=50, verbose_name="Рассрочка", help_text="6/9/12 месяцев", blank=True)
+    file = models.FileField()
+    title = models.CharField(max_length=255)
+    title1 = models.CharField(max_length=255)
+    title2 = models.CharField(max_length=255)
+    title3 = models.CharField(max_length=255)
+    description = models.TextField()
+    phone = models.CharField(max_length=20)
+    address = models.CharField(max_length=255)
+    site_name = models.CharField(max_length=255)
+    site_link = models.URLField()
+    installment_plan = models.CharField(max_length=255)
+  # Основное изображение объявления
+
     class Meta:
         verbose_name = "реклама"
         verbose_name_plural = "реклама"
+
     def __str__(self):
         return self.title
-
-class Schedule(models.Model):
-    advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE, related_name='schedules')
-    day_of_week = models.CharField(max_length=10, verbose_name="День недели")
-    start_time = models.TimeField(verbose_name="Начало работы")
-    end_time = models.TimeField(verbose_name="Конец работы")
-    is_active = models.BooleanField(default=True, verbose_name="Активно")  # Поле для активации расписания
-    class Meta:
-        verbose_name = "Расписание"
-        verbose_name_plural = "Расписания"
-    def __str__(self):
-        return f"{self.day_of_week} ({self.start_time} - {self.end_time})"
-
+#отзыв
 class Review(models.Model):
     name = models.CharField(max_length=255, verbose_name="Имя")
     comment = models.TextField(verbose_name="Комментарий", blank=True)
