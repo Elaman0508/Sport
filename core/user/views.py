@@ -50,7 +50,7 @@ def validate_password(password):
 class RegistrationAPIView(generics.CreateAPIView):
     """Регистрация нового пользователя."""
     serializer_class = UserRegistrationSerializer
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         logger.debug(f"Registration request data: {request.data}")

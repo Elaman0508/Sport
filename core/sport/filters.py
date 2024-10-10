@@ -1,31 +1,32 @@
-# filters.py
 from django_filters import rest_framework as filters
 from .models import *
 
 class HallFilter(filters.FilterSet):
-    sport = filters.CharFilter(field_name='sport__name', lookup_expr='icontains')
+    id = filters.NumberFilter(field_name='sport_id')
 
     class Meta:
         model = Hall
-        fields = ['sport']
+        fields = ['id']
+
 class ClubFilter(filters.FilterSet):
-    sport = filters.CharFilter(field_name='sport__name', lookup_expr='icontains')
+    id = filters.NumberFilter(field_name='sport_id')
 
     class Meta:
         model = Club
-        fields = ['sport']
+        fields = ['id']
+
 # Фильтр для отзывов
 class ReviewFilter(filters.FilterSet):
-    sport = filters.CharFilter(field_name='sport__name', lookup_expr='icontains')
+    id = filters.NumberFilter(field_name='sport_id')
 
     class Meta:
         model = Review
-        fields = ['sport']
+        fields = ['id']
 
 # Фильтр для расписания тренировок
 class TrainingScheduleFilter(filters.FilterSet):
-    sport = filters.CharFilter(field_name='sport__name', lookup_expr='icontains')
+    id = filters.NumberFilter(field_name='sport_id')
 
     class Meta:
         model = TrainingSchedule
-        fields = ['sport']
+        fields = ['id']

@@ -18,7 +18,9 @@ class HallListCreateView(generics.ListCreateAPIView):
 
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
-    serializer_class = HallSerializer # Support for file uploads
+    serializer_class = HallSerializer
+    parser_classes = [MultiPartParser]
+    # Support for file uploads
 #WorkSchedule
 class WorkScheduleListCreateView(generics.ListCreateAPIView):
     queryset = WorkSchedule.objects.all()
