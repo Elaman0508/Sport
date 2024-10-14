@@ -162,9 +162,9 @@ class Trainer(models.Model):
 #Клиенты
 class Client(models.Model):
     PAYMENT_METHOD_CHOICES = [
-        ('cash', 'Наличные'),
-        ('card', 'Карта'),
-        ('transfer', 'Перевод'),
+        ('Наличные', 'Наличные'),
+        ('Карта', 'Карта'),
+        ( 'Перевод', 'Перевод'),
     ]
     SPORT_CHOICES = [
         ('Баскетбол', 'Баскетбол'),

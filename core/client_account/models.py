@@ -46,18 +46,37 @@ class Attendance(models.Model):
 
 
 class Payment1(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)  # Ссылка на кастомную модель пользователя
-    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    paid = models.BooleanField(default=False)
-    payment_date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь"  # Читаемое имя для поля user
+    )
+    schedule = models.ForeignKey(
+        Schedule,
+        on_delete=models.CASCADE,
+        verbose_name="Расписание"  # Читаемое имя для поля schedule
+    )
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Сумма"  # Читаемое имя для поля amount
+    )
+    paid = models.BooleanField(
+        default=False,
+        verbose_name="Оплачено"  # Читаемое имя для поля paid
+    )
+    payment_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата платежа"  # Читаемое имя для поля payment_date
+    )
 
     def __str__(self):
         return f"{self.user.username} - {self.amount} - {self.paid}"
 
     class Meta:
         ordering = ['-payment_date']
+        verbose_name = "Платеж"  # Имя в единственном числе
+        verbose_name_plural = "Платежи"  # Имя во множественном числе
 
 
 class UserProfile(models.Model):
