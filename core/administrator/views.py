@@ -2,7 +2,7 @@ import stripe
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status, viewsets
 from rest_framework.generics import ListCreateAPIView
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -90,10 +90,12 @@ class TrainerCreateView(generics.ListCreateAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
     parser_classes = [MultiPartParser]
+    parser_classes = [JSONParser]
 # View for retrieving, updating, and deleting a specific Trainer
 class TrainerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
+    parser_classes = [JSONParser]
 #client
 # View for listing and creating Clients
 class ClientListCreateView(generics.ListCreateAPIView):
