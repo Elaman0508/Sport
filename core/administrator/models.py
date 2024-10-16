@@ -14,7 +14,7 @@ class Hall(models.Model):
         ('Йога', 'Йога'),
     ]
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
-    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
+    image = models.ImageField()
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     description = models.TextField(verbose_name='Описание')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
@@ -82,7 +82,7 @@ class Circle(models.Model):
         ('Йога', 'Йога'),
     ]
     title = models.CharField(verbose_name='Заголовок', max_length=255)
-    image = models.ImageField(upload_to='circle_images/', verbose_name='Фото')
+    image = models.ImageField()
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     description1 = models.TextField(verbose_name='Описание 1', blank=True)

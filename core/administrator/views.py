@@ -38,7 +38,7 @@ class CircleListCreateView(generics.ListCreateAPIView):
 class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
-
+    parser_classes = [MultiPartParser]
 #Schedul
 class SchedulListCreateView(generics.ListCreateAPIView):
     queryset = Schedul.objects.all()

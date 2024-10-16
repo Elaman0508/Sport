@@ -11,7 +11,7 @@ class HallImageSerializer(serializers.ModelSerializer):
         ref_name = 'HallImageSerializer'  # Добавлено ref_name
 
 class HallSerializer(serializers.ModelSerializer):
-    hall_images = HallImageSerializer(many=True, read_only=True)
+    hall_images = HallImageSerializer()
 
     class Meta:
         model = Hall
@@ -31,7 +31,7 @@ class CircleImageSerializer(serializers.ModelSerializer):
 
 #Кружки
 class CircleSerializer(serializers.ModelSerializer):
-    circle_images = CircleImageSerializer(many=True, read_only=True)
+    circle_images = CircleImageSerializer()
 
     class Meta:
         model = Circle
