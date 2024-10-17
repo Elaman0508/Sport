@@ -11,12 +11,20 @@ class HallImageSerializer(serializers.ModelSerializer):
         ref_name = 'HallImageSerializer'  # Добавлено ref_name
 
 class HallSerializer(serializers.ModelSerializer):
-    hall_images = HallImageSerializer()
+    images = HallImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Hall
         fields = '__all__'
-        ref_name = 'HallSerializer'  # Задайте уникальное имя
+        ref_name = 'HallSerializer'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Удаляем поле 'images', если оно пустое
+        if not representation['images']:
+            representation.pop('images')
+        return representation
+    # Задайте уникальное имя
 
 class WorkScheduleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,12 +39,18 @@ class CircleImageSerializer(serializers.ModelSerializer):
 
 #Кружки
 class CircleSerializer(serializers.ModelSerializer):
-    circle_images = CircleImageSerializer()
+    images = CircleImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Circle
-        fields = '__all__'
-        ref_name = 'CircleSerializer'
+        fields = '__all__'  # Или перечислите необходимые поля
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Удаляем поле 'images', если оно пустое
+        if not representation['images']:
+            representation.pop('images')
+        return representation
 
 class SchedulSerializer(serializers.ModelSerializer):
     class Meta:

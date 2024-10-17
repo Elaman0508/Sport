@@ -2,16 +2,20 @@ from django.contrib import admin
 from .models import *
 class HallImageInline(admin.TabularInline):
     model = HallImage
-    extra = 1
-    verbose_name = 'Изображение зала'
-    verbose_name_plural = 'Изображения залов'
+    extra = 1  # Позволяет добавлять изображения напрямую в админке для каждого зала
 
 @admin.register(Hall)
 class HallAdmin(admin.ModelAdmin):
-    list_display = ('title', 'sports', 'phone', 'address', 'size', 'price_per_hour', 'quantity')
-    search_fields = ('title', 'description', 'phone', 'address')
-    list_filter = ('sports', 'hall_type', 'shower', 'lighting', 'dressing_room')
-    inlines = [HallImageInline]
+    list_display = ('title', 'address', 'phone', 'price_per_hour', 'quantity', 'hall_type')  # Отображаемые поля в списке
+    list_filter = ('sports', 'hall_type', 'shower', 'lighting', 'dressing_room')  # Фильтры по полям
+    search_fields = ('title', 'address', 'description')  # Поиск по заголовку, адресу и описанию
+    inlines = [HallImageInline]  # Включаем изображения в страницу зала # Удобный интерфейс для выбора нескольких видов спорта
+
+@admin.register(HallImage)
+class HallImageAdmin(admin.ModelAdmin):
+    list_display = ('hall', 'image')  # Отображаемые поля
+    search_fields = ('hall__title',)  # Поиск по названию зала
+
 
 class WorkScheduleAdmin(admin.ModelAdmin):
     list_display = ('day_of_week', 'opening_time', 'closing_time','is_active')

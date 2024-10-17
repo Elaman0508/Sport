@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status, viewsets
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.parsers import MultiPartParser, JSONParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -14,13 +15,16 @@ class HallListCreateView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
-  # Support for file uploads
+    permission_classes = [IsAuthenticated]
+
+    # Support for file uploads
 
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
-    # Support for file uploads
+    permission_classes = [IsAuthenticated]
+
 #WorkSchedule
 class WorkScheduleListCreateView(generics.ListCreateAPIView):
     queryset = WorkSchedule.objects.all()
@@ -34,11 +38,13 @@ class CircleListCreateView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
     parser_classes = [MultiPartParser]
+    permission_classes = [IsAuthenticated]
 
 class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
     parser_classes = [MultiPartParser]
+    permission_classes = [IsAuthenticated]
 #Schedul
 class SchedulListCreateView(generics.ListCreateAPIView):
     queryset = Schedul.objects.all()

@@ -36,7 +36,7 @@ class Hall(models.Model):
 #
 class HallImage(models.Model):
     hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
-    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
+    image = models.ImageField(upload_to='hall_image/', verbose_name='Изображение')
 
     class Meta:
         verbose_name = 'Изображение зала'
@@ -82,7 +82,7 @@ class Circle(models.Model):
         ('Йога', 'Йога'),
     ]
     title = models.CharField(verbose_name='Заголовок', max_length=255)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='circle_images/')
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     description1 = models.TextField(verbose_name='Описание 1', blank=True)
@@ -100,16 +100,9 @@ class Circle(models.Model):
         verbose_name = 'Кружок'
         verbose_name_plural = 'Кружки'
 
-
 class CircleImage(models.Model):
-    image = models.ImageField(upload_to='circle_images/', verbose_name='Фото')
-    circle = models.ForeignKey(Circle, related_name='circle_images', on_delete=models.CASCADE, verbose_name='Кружок')
-    description = models.CharField(max_length=255, blank=True, verbose_name='Описание изображения')  # Дополнительное поле для описания
-    def __str__(self):
-        return f'Изображение {self.id}'
-    class Meta:
-        verbose_name = 'Фото кружка'
-        verbose_name_plural = 'Фото кружков'
+    circle = models.ForeignKey(Circle, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='circle_images/')
 
 class Schedul(models.Model):
     CATEGORY_CHOICES = (
