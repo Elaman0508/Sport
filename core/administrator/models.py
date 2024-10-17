@@ -188,9 +188,6 @@ class Client(models.Model):
 #реклама
 class Advertisement(models.Model):
     file = models.FileField()
-    file1 = models.FileField()
-    file2 = models.FileField()
-    file3 = models.FileField()
     title = models.CharField(max_length=255)
     title1 = models.CharField(max_length=255)
     title2 = models.CharField(max_length=255)
