@@ -15,6 +15,9 @@ class Hall(models.Model):
     ]
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     image = models.ImageField()
+    image1 = models.ImageField()
+    image2 = models.ImageField()
+    image3 = models.ImageField()
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     description = models.TextField(verbose_name='Описание')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
@@ -83,6 +86,9 @@ class Circle(models.Model):
     ]
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     image = models.ImageField(upload_to='circle_images/')
+    image1 = models.ImageField(upload_to='circle_images/')
+    image2 = models.ImageField(upload_to='circle_images/')
+    image3 = models.ImageField(upload_to='circle_images/')
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     description1 = models.TextField(verbose_name='Описание 1', blank=True)
@@ -189,7 +195,7 @@ class Advertisement(models.Model):
     title1 = models.CharField(max_length=255)
     title2 = models.CharField(max_length=255)
     title3 = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(max_length=300)
     phone = models.CharField(max_length=20)
     address = models.CharField(max_length=255)
     site_name = models.CharField(max_length=255)

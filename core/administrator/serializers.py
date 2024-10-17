@@ -98,6 +98,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
         fields = '__all__'
+
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review

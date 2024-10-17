@@ -17,8 +17,6 @@ class HallListCreateView(generics.ListCreateAPIView):
     parser_classes = [MultiPartParser]
     permission_classes = [IsAuthenticated]
 
-    # Support for file uploads
-
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
@@ -69,7 +67,6 @@ class SchedulRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
-
 #login
 class UserLoginView(generics.CreateAPIView):
     """User authentication for administrators only."""
