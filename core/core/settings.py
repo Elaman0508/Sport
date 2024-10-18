@@ -85,6 +85,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "https://example.com",
     "http://localhost:3000",
+    # "http://192.168.68.134:3000",  # Ваш IP-адрес для локальной сети
     # Добавьте другие домены по мере необходимости
 ]
 

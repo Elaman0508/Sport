@@ -1,21 +1,10 @@
 from django.contrib import admin
 from .models import *
-class HallImageInline(admin.TabularInline):
-    model = HallImage
-    extra = 1  # Позволяет добавлять изображения напрямую в админке для каждого зала
-
 @admin.register(Hall)
 class HallAdmin(admin.ModelAdmin):
     list_display = ('title', 'address', 'phone', 'price_per_hour', 'quantity', 'hall_type')  # Отображаемые поля в списке
     list_filter = ('sports', 'hall_type', 'shower', 'lighting', 'dressing_room')  # Фильтры по полям
     search_fields = ('title', 'address', 'description')  # Поиск по заголовку, адресу и описанию
-    inlines = [HallImageInline]  # Включаем изображения в страницу зала # Удобный интерфейс для выбора нескольких видов спорта
-
-@admin.register(HallImage)
-class HallImageAdmin(admin.ModelAdmin):
-    list_display = ('hall', 'image')  # Отображаемые поля
-    search_fields = ('hall__title',)  # Поиск по названию зала
-
 
 class WorkScheduleAdmin(admin.ModelAdmin):
     list_display = ('day_of_week', 'opening_time', 'closing_time','is_active')
@@ -23,16 +12,13 @@ class WorkScheduleAdmin(admin.ModelAdmin):
     search_fields = ('day_of_week',)
 
 admin.site.register(WorkSchedule, WorkScheduleAdmin)
-class CircleImageInline(admin.TabularInline):
-    model = CircleImage
-    extra = 1  # Количество пустых полей для добавления новых изображений
 
 # Настройка отображения модели Circle
 @admin.register(Circle)
 class CircleAdmin(admin.ModelAdmin):
     list_display = ('title', 'sports', 'phone', 'address')  # Поля, отображаемые в списке кружков
     search_fields = ('title', 'sports')  # Поля, по которым можно искать кружки
-    inlines = [CircleImageInline]  # Отображение связанных изображений на странице кружка
+ # Отображение связанных изображений на странице кружка
     fieldsets = (
         (None, {
             'fields': ('title', 'image', 'sports', 'phone', 'address'),

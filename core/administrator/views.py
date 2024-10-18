@@ -16,7 +16,7 @@ class HallListCreateView(generics.ListCreateAPIView):
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
     # permission_classes = [IsAuthenticated]
-    
+
 
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()

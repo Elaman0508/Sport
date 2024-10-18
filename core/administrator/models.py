@@ -1,6 +1,7 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.conf import settings
+
 class Hall(models.Model):
     SPORT_CHOICES = [
         ('Баскетбол', 'Баскетбол'),
@@ -13,11 +14,13 @@ class Hall(models.Model):
         ('Плавание', 'Плавание'),
         ('Йога', 'Йога'),
     ]
+
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
-    image = models.ImageField()
-    image1 = models.ImageField()
-    image2 = models.ImageField()
-    image3 = models.ImageField()
+    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
+    image1 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение 1', blank=True, null=True)
+    image2 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение 2', blank=True, null=True)
+    image3 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение 3', blank=True, null=True)
+
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     description = models.TextField(verbose_name='Описание')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
@@ -31,19 +34,56 @@ class Hall(models.Model):
     shower = models.BooleanField(default=False, verbose_name='Душевая')  # Душевая
     lighting = models.BooleanField(default=False, verbose_name='Освещение')  # Освещение
     dressing_room = models.BooleanField(default=False, verbose_name='Раздевалка')  # Раздевалка
+
     def __str__(self):
         return self.title
+
     class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
-#
-class HallImage(models.Model):
-    hall = models.ForeignKey(Hall, related_name='images', on_delete=models.CASCADE, verbose_name='Зал')
-    image = models.ImageField(upload_to='hall_image/', verbose_name='Изображение')
 
-    class Meta:
-        verbose_name = 'Изображение зала'
-        verbose_name_plural = 'Изображения залов'
+    def save(self, *args, **kwargs):
+        # Эгер pk бар болсо, эскини текшеребиз
+        if self.pk:
+            old_hall = Hall.objects.get(pk=self.pk)
+            # Эгер жаңы сүрөт жүктөлбөсө, мурунку сүрөттү сактайбыз
+            if not self.image:
+                self.image = old_hall.image
+            if not self.image1:
+                self.image1 = old_hall.image1
+            if not self.image2:
+                self.image2 = old_hall.image2
+            if not self.image3:
+                self.image3 = old_hall.image3
+            # Башка талааларды да текшерип сактап калууга болот
+            if not self.title:
+                self.title = old_hall.title
+            if not self.description:
+                self.description = old_hall.description
+            if not self.phone:
+                self.phone = old_hall.phone
+            if not self.address:
+                self.address = old_hall.address
+            if not self.size:
+                self.size = old_hall.size
+            if not self.inventory:
+                self.inventory = old_hall.inventory
+            if not self.price_per_hour:
+                self.price_per_hour = old_hall.price_per_hour
+            if not self.quantity:
+                self.quantity = old_hall.quantity
+            if not self.coverage:
+                self.coverage = old_hall.coverage
+            if not self.hall_type:
+                self.hall_type = old_hall.hall_type
+            if self.shower is None:
+                self.shower = old_hall.shower
+            if self.lighting is None:
+                self.lighting = old_hall.lighting
+            if self.dressing_room is None:
+                self.dressing_room = old_hall.dressing_room
+
+        super().save(*args, **kwargs)
 
 class WorkSchedule(models.Model):
     day_of_week = models.CharField(
@@ -84,11 +124,12 @@ class Circle(models.Model):
         ('Плавание', 'Плавание'),
         ('Йога', 'Йога'),
     ]
+
     title = models.CharField(verbose_name='Заголовок', max_length=255)
-    image = models.ImageField(upload_to='circle_images/')
-    image1 = models.ImageField(upload_to='circle_images/')
-    image2 = models.ImageField(upload_to='circle_images/')
-    image3 = models.ImageField(upload_to='circle_images/')
+    image = models.ImageField(upload_to='circle_images/',blank=True, null=True)
+    image1 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
+    image2 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
+    image3 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     description1 = models.TextField(verbose_name='Описание 1', blank=True)
@@ -100,16 +141,58 @@ class Circle(models.Model):
     description3 = models.TextField(verbose_name='Описание 3', blank=True)
     header4 = models.CharField(verbose_name='Заголовок 4', max_length=255, blank=True)
     description4 = models.TextField(verbose_name='Описание 4', blank=True)
+
     def __str__(self):
         return self.title
+
     class Meta:
         verbose_name = 'Кружок'
         verbose_name_plural = 'Кружки'
 
-class CircleImage(models.Model):
-    circle = models.ForeignKey(Circle, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='circle_images/')
+    def save(self, *args, **kwargs):
+        # Эгер pk бар болсо, эскини текшеребиз
+        if self.pk:
+            try:
+                old_circle = Circle.objects.get(pk=self.pk)
+                # Эгер жаңы файл жүктөлбөсө, мурунку файлды сактайбыз
+                if not self.image:
+                    self.image = old_circle.image
+                if not self.image1:
+                    self.image1 = old_circle.image1
+                if not self.image2:
+                    self.image2 = old_circle.image2
+                if not self.image3:
+                    self.image3 = old_circle.image3
 
+                # Башка талааларды да текшерип сактап калууга болот
+                if not self.title:
+                    self.title = old_circle.title
+                if not self.header1:
+                    self.header1 = old_circle.header1
+                if not self.description1:
+                    self.description1 = old_circle.description1
+                if not self.phone:
+                    self.phone = old_circle.phone
+                if not self.address:
+                    self.address = old_circle.address
+                if not self.header2:
+                    self.header2 = old_circle.header2
+                if not self.description2:
+                    self.description2 = old_circle.description2
+                if not self.header3:
+                    self.header3 = old_circle.header3
+                if not self.description3:
+                    self.description3 = old_circle.description3
+                if not self.header4:
+                    self.header4 = old_circle.header4
+                if not self.description4:
+                    self.description4 = old_circle.description4
+
+            except ObjectDoesNotExist:
+                # Эгер эски рекорд табылбаса, жаңадан түзүү
+                pass
+
+        super().save(*args, **kwargs)
 class Schedul(models.Model):
     CATEGORY_CHOICES = (
         ('adults', 'Взрослые'),
@@ -151,13 +234,17 @@ class Trainer(models.Model):
     last_name = models.CharField(verbose_name='Фамилия', max_length=255)
     email = models.EmailField(verbose_name='Электронная почта')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
-    photo = models.ImageField(verbose_name='Фото', upload_to='trainers_photos/', blank=True, null=True)
+    photo = models.ImageField(verbose_name='Фото', upload_to='trainers_photos/')
     sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
+
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+
     class Meta:
         verbose_name = 'Тренер'
         verbose_name_plural = 'Тренеры'
+        unique_together = ('email', 'sport')  # Уникальность комбинации email и спорт
+
 #Клиенты
 class Client(models.Model):
     PAYMENT_METHOD_CHOICES = [
@@ -185,9 +272,9 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
-#реклама
+
 class Advertisement(models.Model):
-    file = models.FileField()
+    file = models.FileField(upload_to='advertisements/', blank=True, null=True)
     title = models.CharField(max_length=255)
     title1 = models.CharField(max_length=255)
     title2 = models.CharField(max_length=255)
@@ -198,7 +285,6 @@ class Advertisement(models.Model):
     site_name = models.CharField(max_length=255)
     site_link = models.URLField()
     installment_plan = models.CharField(max_length=255)
-  # Основное изображение объявления
 
     class Meta:
         verbose_name = "реклама"
@@ -206,6 +292,38 @@ class Advertisement(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        # Эгер pk бар болсо, эскини текшеребиз
+        if self.pk:
+            old_advertisement = Advertisement.objects.get(pk=self.pk)
+            # Эгер жаңы файл жүктөлбөсө, мурунку файлды сактайбыз
+            if not self.file:
+                self.file = old_advertisement.file
+            # Башка талааларды да текшерип сактап калууга болот
+            if not self.title:
+                self.title = old_advertisement.title
+            if not self.title1:
+                self.title1 = old_advertisement.title1
+            if not self.title2:
+                self.title2 = old_advertisement.title2
+            if not self.title3:
+                self.title3 = old_advertisement.title3
+            if not self.description:
+                self.description = old_advertisement.description
+            if not self.phone:
+                self.phone = old_advertisement.phone
+            if not self.address:
+                self.address = old_advertisement.address
+            if not self.site_name:
+                self.site_name = old_advertisement.site_name
+            if not self.site_link:
+                self.site_link = old_advertisement.site_link
+            if not self.installment_plan:
+                self.installment_plan = old_advertisement.installment_plan
+        super().save(*args, **kwargs)
+
+
 #отзыв
 class Review(models.Model):
     name = models.CharField(max_length=255, verbose_name="Имя")
