@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.conf import settings
@@ -17,9 +18,9 @@ class Hall(models.Model):
 
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
-    image1 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение 1', blank=True, null=True)
-    image2 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение 2', blank=True, null=True)
-    image3 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение 3', blank=True, null=True)
+    image1 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
+    image2 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
+    image3 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
 
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     description = models.TextField(verbose_name='Описание')
@@ -86,6 +87,7 @@ class Hall(models.Model):
         super().save(*args, **kwargs)
 
 class WorkSchedule(models.Model):
+    hall = models.ForeignKey(Hall, related_name='schedules', on_delete=models.CASCADE, verbose_name="Зал")
     day_of_week = models.CharField(
         max_length=12,
         choices=[
@@ -101,14 +103,15 @@ class WorkSchedule(models.Model):
     )
     opening_time = models.TimeField(verbose_name="Время открытия")
     closing_time = models.TimeField(verbose_name="Время закрытия")
-    # Поле по умолчанию True
     is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
+
     class Meta:
-        unique_together = ('day_of_week', 'opening_time')
+        unique_together = ('hall', 'day_of_week', 'opening_time')
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
+
     def __str__(self):
-        return f"{self.day_of_week}: {self.opening_time} - {self.closing_time}"
+        return f"{self.hall.title} - {self.day_of_week}: {self.opening_time} - {self.closing_time}"
 
 
 #Кружки
@@ -199,18 +202,34 @@ class Schedul(models.Model):
         ('teens', 'Подростки'),
         ('kids', 'Дети'),
     )
+    сircle = models.ForeignKey(Circle, related_name='schedules', on_delete=models.CASCADE, verbose_name="кружки")
+    day_of_week = models.CharField(
+        max_length=12,
+        choices=[
+            ('Понедельник', 'Понедельник'),
+            ('Вторник', 'Вторник'),
+            ('Среда', 'Среда'),
+            ('Четверг', 'Четверг'),
+            ('Пятница', 'Пятница'),
+            ('Суббота', 'Суббота'),
+            ('Воскресенье', 'Воскресенье'),
+        ],
+        verbose_name="День недели"
+    )
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
-    day_of_week = models.CharField(max_length=15, verbose_name="День недели")
     start_time = models.TimeField(verbose_name="Начало занятия")
     end_time = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
     category1 = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
     day_of_week1 = models.CharField(max_length=15, verbose_name="День недели")
     start_time1 = models.TimeField(verbose_name="Начало занятия")
     end_time1 = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
     category2 = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
     day_of_week2 = models.CharField(max_length=15, verbose_name="День недели")
     start_time2 = models.TimeField(verbose_name="Начало занятия")
     end_time2 = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
     class Meta:
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
