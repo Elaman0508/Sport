@@ -26,11 +26,11 @@ class ScheduleAdmin(admin.ModelAdmin):
 class Payment1Admin(admin.ModelAdmin):
     list_display = ('user', 'category', 'sport', 'enrollment_date', 'paid')
     list_filter = ('category', 'sport', 'paid', 'day_of_week', 'is_active')
-    search_fields = ('user__username', 'sport', 'age_group')
+    search_fields = ('user__username', 'sport', 'category')
     ordering = ['-enrollment_date']
     fieldsets = (
         (None, {
-            'fields': ('user', 'age', 'sport', 'schedule', 'day_of_week', 'opening_time', 'closing_time', 'paid')
+            'fields': ('user', 'category', 'sport', 'schedule', 'day_of_week', 'opening_time', 'closing_time', 'paid')
         }),
         ('Дополнительная информация', {
             'fields': ('enrollment_date', 'is_active'),
