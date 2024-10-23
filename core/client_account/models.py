@@ -112,7 +112,6 @@ class Payment1(models.Model):
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
 
-
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
