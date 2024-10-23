@@ -68,7 +68,7 @@ class Payment1(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Пользователь"
     )
-    age_group = models.CharField(
+    age = models.CharField(
         max_length=20,
         choices=AGE_CHOICES,
         verbose_name="Возрастная группа"
