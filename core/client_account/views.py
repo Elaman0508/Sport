@@ -15,7 +15,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     serializer_class = AttendanceSerializer
 
 
-class Payment1ViewSet(viewsets.ModelViewSet):
+class PaymentListView(generics.ListCreateAPIView):
     queryset = Payment1.objects.all()
     serializer_class = Payment1Serializer
 

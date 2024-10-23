@@ -79,6 +79,7 @@ TEMPLATES = [
         },
     },
 ]
+DEBUG = True
 
 WSGI_APPLICATION = 'core.wsgi.application'
 CORS_ALLOW_ALL_ORIGINS = True
