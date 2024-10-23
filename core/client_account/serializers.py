@@ -16,8 +16,7 @@ class AttendanceSerializer(serializers.ModelSerializer):
 class Payment1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Payment1
-        fields = '__all__'  # Specify fields explicitly
-
+        fields = '__all__'
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

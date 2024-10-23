@@ -44,10 +44,8 @@ class Attendance(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.schedule}"
 
-
-
 class Payment1(models.Model):
-    AGE_GROUPS = [
+    AGE_CHOICES = [
         ('Взрослые', 'Взрослые'),
         ('Подростки', 'Подростки'),
         ('Дети', 'Дети')
@@ -72,7 +70,7 @@ class Payment1(models.Model):
     )
     age_group = models.CharField(
         max_length=20,
-        choices=AGE_GROUPS,
+        choices=AGE_CHOICES,
         verbose_name="Возрастная группа"
     )
     sport = models.CharField(
