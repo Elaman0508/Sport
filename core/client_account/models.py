@@ -62,7 +62,7 @@ class Payment1(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Пользователь"
     )
-    sport= models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
+    sport= models.CharField(verbose_name='Виды спорта', max_length=100, choices=SPORTS_CHOICES)
     paid = models.BooleanField(
         default=False,
         verbose_name="Оплачено"
