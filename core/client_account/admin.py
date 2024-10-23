@@ -24,8 +24,8 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(Payment1)
 class Payment1Admin(admin.ModelAdmin):
-    list_display = ('user', 'age', 'sport', 'enrollment_date', 'paid')
-    list_filter = ('age', 'sport', 'paid', 'day_of_week', 'is_active')
+    list_display = ('user', 'category', 'sport', 'enrollment_date', 'paid')
+    list_filter = ('category', 'sport', 'paid', 'day_of_week', 'is_active')
     search_fields = ('user__username', 'sport', 'age_group')
     ordering = ['-enrollment_date']
     fieldsets = (
