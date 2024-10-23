@@ -45,44 +45,78 @@ class Attendance(models.Model):
         return f"{self.user.username} - {self.schedule}"
 
 
+
 class Payment1(models.Model):
+    AGE_GROUPS = [
+        ('Взрослые', 'Взрослые'),
+        ('Подростки', 'Подростки'),
+        ('Дети', 'Дети')
+    ]
+
+    SPORTS_CHOICES = [
+        ('Баскетбол', 'Баскетбол'),
+        ('Футбол', 'Футбол'),
+        ('Волейбол', 'Волейбол'),
+        ('Тенис', 'Тенис'),
+        ('Бокс', 'Бокс'),
+        ('Велоспорт', 'Велоспорт'),
+        ('Таэквондо', 'Таэквондо'),
+        ('Плавание', 'Плавание'),
+        ('Йога', 'Йога'),
+    ]
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        verbose_name="Пользователь"  # Читаемое имя для поля user
+        verbose_name="Пользователь"
     )
-    schedule = models.ForeignKey(
-        Schedule,
-        on_delete=models.CASCADE,
-        verbose_name="Расписание"  # Читаемое имя для поля schedule
+    age_group = models.CharField(
+        max_length=20,
+        choices=AGE_GROUPS,
+        verbose_name="Возрастная группа"
     )
-    amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name="Сумма"  # Читаемое имя для поля amount
+    sport = models.CharField(
+        max_length=20,
+        choices=SPORTS_CHOICES,
+        verbose_name="Спорт"
     )
     paid = models.BooleanField(
         default=False,
-        verbose_name="Оплачено"  # Читаемое имя для поля paid
+        verbose_name="Оплачено"
     )
-    payment_date = models.DateTimeField(
+    enrollment_date = models.DateTimeField(
         auto_now_add=True,
-        verbose_name="Дата платежа"  # Читаемое имя для поля payment_date
+        verbose_name="Дата записи"
     )
-
-    def __str__(self):
-        return f"{self.user.username} - {self.amount} - {self.paid}"
+    day_of_week = models.CharField(
+        max_length=12,
+        choices=[
+            ('Понедельник', 'Понедельник'),
+            ('Вторник', 'Вторник'),
+            ('Среда', 'Среда'),
+            ('Четверг', 'Четверг'),
+            ('Пятница', 'Пятница'),
+            ('Суббота', 'Суббота'),
+            ('Воскресенье', 'Воскресенье'),
+        ],
+        verbose_name="День недели"
+    )
+    opening_time = models.TimeField(verbose_name="Время открытия")
+    closing_time = models.TimeField(verbose_name="Время закрытия")
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активное расписание (True)"
+    )
 
     class Meta:
-        ordering = ['-payment_date']
-        verbose_name = "Платеж"  # Имя в единственном числе
-        verbose_name_plural = "Платежи"  # Имя во множественном числе
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20, unique=True)
+    phone = models.CharField(max_length=20)
     birth_date = models.DateField()
     gender = models.CharField(max_length=10)
     address = models.CharField(max_length=255)

@@ -21,27 +21,21 @@ class ScheduleAdmin(admin.ModelAdmin):
 
     sport.short_description = 'Спорт'
 
-class Payment1Admin(admin.ModelAdmin):
-    list_display = ('user', 'schedule', 'amount', 'paid', 'payment_date')  # Поля, отображаемые в списке
-    list_filter = ('paid', 'payment_date')  # Фильтры для поиска
-    search_fields = ('user__username', 'amount')  # Поля для поиска
-    ordering = ('-payment_date',)  # Порядок сортировки по умолчанию
 
-    # Настройка форм для редактирования
+@admin.register(Payment1)
+class Payment1Admin(admin.ModelAdmin):
+    list_display = ('user', 'age_group', 'sport', 'enrollment_date', 'paid')
+    list_filter = ('age_group', 'sport', 'paid', 'day_of_week', 'is_active')
+    search_fields = ('user__username', 'sport', 'age_group')
+    ordering = ['-enrollment_date']
     fieldsets = (
         (None, {
-            'fields': ('user', 'schedule', 'amount', 'paid')
+            'fields': ('user', 'age_group', 'sport', 'schedule', 'day_of_week', 'opening_time', 'closing_time', 'paid')
         }),
-        # Убираем payment_date из fieldsets
-        # ('Дата платежа', {
-        #     'fields': ('payment_date',),
-        #     'classes': ('collapse',),  # Скрывает поле по умолчанию
-        # }),
+        ('Дополнительная информация', {
+            'fields': ('enrollment_date', 'is_active'),
+            'classes': ('collapse',),
+        }),
     )
 
-    # Не нужно добавлять payment_date в read-only fields, так как оно не редактируется
-    def get_readonly_fields(self, request, obj=None):
-        return ['payment_date'] if obj else []
-
 # Регистрация модели Payment1 с администратором
-admin.site.register(Payment1, Payment1Admin)
