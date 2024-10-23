@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Schedule, Attendance, Payment1, UserProfile
+from .models import *
 
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,7 +17,11 @@ class Payment1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Payment1
         fields = '__all__'
-
+class SchedulSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedul
+        fields = '__all__'
+        read_only_fields = ['circle']
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile

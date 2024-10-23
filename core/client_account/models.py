@@ -45,33 +45,22 @@ class Attendance(models.Model):
         return f"{self.user.username} - {self.schedule}"
 
 class Payment1(models.Model):
-    CATEGORY_CHOICES = [
-        ('Взрослые', 'Взрослые'),
-        ('Подростки', 'Подростки'),
-        ('Дети', 'Дети')
-    ]
-
     SPORTS_CHOICES = [
-        ('Баскетбол', 'Баскетбол'),
-        ('Футбол', 'Футбол'),
-        ('Волейбол', 'Волейбол'),
-        ('Тенис', 'Тенис'),
-        ('Бокс', 'Бокс'),
-        ('Велоспорт', 'Велоспорт'),
-        ('Таэквондо', 'Таэквондо'),
-        ('Плавание', 'Плавание'),
-        ('Йога', 'Йога'),
+        ('баскетбол', 'Баскетбол'),
+        ('футбол', 'Футбол'),
+        ('волейбол', 'Волейбол'),
+        ('теннис', 'Тенис'),
+        ('бокс', 'Бокс'),
+        ('велоспорт', 'Велоспорт'),
+        ('таэквондо', 'Таэквондо'),
+        ('плавание', 'Плавание'),
+        ('йога', 'Йога'),
     ]
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name="Пользователь"
-    )
-    category = models.CharField(
-        max_length=20,
-        choices=CATEGORY_CHOICES,
-        verbose_name="Возрастная группа"
     )
     sport = models.CharField(
         max_length=20,
@@ -86,29 +75,60 @@ class Payment1(models.Model):
         auto_now_add=True,
         verbose_name="Дата записи"
     )
-    day_of_week = models.CharField(
-        max_length=12,
-        choices=[
-            ('Понедельник', 'Понедельник'),
-            ('Вторник', 'Вторник'),
-            ('Среда', 'Среда'),
-            ('Четверг', 'Четверг'),
-            ('Пятница', 'Пятница'),
-            ('Суббота', 'Суббота'),
-            ('Воскресенье', 'Воскресенье'),
-        ],
-        verbose_name="День недели"
-    )
     opening_time = models.TimeField(verbose_name="Время открытия")
     closing_time = models.TimeField(verbose_name="Время закрытия")
     is_active = models.BooleanField(
         default=True,
-        verbose_name="Активное расписание (True)"
+        verbose_name="Активное расписание"
     )
 
     class Meta:
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
+
+
+class Schedul(models.Model):
+    CATEGORY_CHOICES = (
+        ('взрослые', 'Взрослые'),
+        ('подростки', 'Подростки'),
+        ('дети', 'Дети'),
+    )
+
+    circle = models.ForeignKey(
+        Payment1,
+        related_name='Платежи',
+        on_delete=models.CASCADE,
+        verbose_name=""
+    )
+    day_of_week = models.CharField(
+        max_length=12,
+        choices=[
+            ('понедельник', 'Понедельник'),
+            ('вторник', 'Вторник'),
+            ('среда', 'Среда'),
+            ('четверг', 'Четверг'),
+            ('пятница', 'Пятница'),
+            ('суббота', 'Суббота'),
+            ('воскресенье', 'Воскресенье'),
+        ],
+        verbose_name="День недели"
+    )
+    category = models.CharField(
+        max_length=10,
+        choices=CATEGORY_CHOICES,
+        verbose_name="Категория"
+    )
+    start_time = models.TimeField(verbose_name="Начало занятия")
+    end_time = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name="Активное расписание")
+
+    class Meta:
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"
+
+    def __str__(self):
+        return f'{self.get_category_display()} - {self.day_of_week}'
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

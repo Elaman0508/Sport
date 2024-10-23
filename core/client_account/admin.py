@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Schedule, Attendance, Payment1
+from .models import *
 
 
 @admin.register(UserProfile)
@@ -22,20 +22,20 @@ class ScheduleAdmin(admin.ModelAdmin):
     sport.short_description = 'Спорт'
 
 
-@admin.register(Payment1)
 class Payment1Admin(admin.ModelAdmin):
-    list_display = ('user', 'category', 'sport', 'enrollment_date', 'paid')
-    list_filter = ('category', 'sport', 'paid', 'day_of_week', 'is_active')
-    search_fields = ('user__username', 'sport', 'category')
-    ordering = ['-enrollment_date']
-    fieldsets = (
-        (None, {
-            'fields': ('user', 'category', 'sport', 'schedule', 'day_of_week', 'opening_time', 'closing_time', 'paid')
-        }),
-        ('Дополнительная информация', {
-            'fields': ('enrollment_date', 'is_active'),
-            'classes': ('collapse',),
-        }),
-    )
+    list_display = ('user', 'sport', 'paid', 'enrollment_date', 'is_active')
+    list_filter = ('sport', 'paid', 'is_active')
+    search_fields = ('user__username', 'sport')
+    ordering = ('-enrollment_date',)
+
+class SchedulAdmin(admin.ModelAdmin):
+    list_display = ('circle', 'day_of_week', 'category', 'start_time', 'end_time', 'is_active')
+    list_filter = ('day_of_week', 'category', 'is_active')
+    search_fields = ('circle__user__username', 'category')
+    ordering = ('day_of_week', 'start_time')
+
+# Регистрация моделей в админ-панели
+admin.site.register(Payment1, Payment1Admin)
+admin.site.register(Schedul, SchedulAdmin)
 
 # Регистрация модели Payment1 с администратором

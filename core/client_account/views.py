@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Schedule, Attendance, Payment1, UserProfile
-from .serializers import ScheduleSerializer, AttendanceSerializer, Payment1Serializer, UserProfileSerializer
+from .models import *
+from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 
@@ -18,6 +18,9 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 class PaymentListCreateView(generics.ListCreateAPIView):
     queryset = Payment1.objects.all()
     serializer_class = Payment1Serializer
+class SchedulListCreateView(generics.ListCreateAPIView):
+    queryset = Schedul.objects.all()
+    serializer_class = SchedulSerializer
 
 
 
