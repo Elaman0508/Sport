@@ -14,14 +14,17 @@ class AttendanceSerializer(serializers.ModelSerializer):
 
 
 class Payment1Serializer(serializers.ModelSerializer):
+    sport_display = serializers.CharField(source='get_sport_display', read_only=True)
+
     class Meta:
         model = Payment1
-        fields = '__all__'
+        fields = ['id', 'user', 'sport', 'sport_display', 'paid', 'enrollment_date', 'opening_time', 'closing_time', 'is_active']
+
 class SchedulSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedul
-        fields = '__all__'
-        read_only_fields = ['circle']
+        fields = ['id', 'circle', 'day_of_week', 'category', 'start_time', 'end_time', 'is_active']
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
