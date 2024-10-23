@@ -45,7 +45,7 @@ class Attendance(models.Model):
         return f"{self.user.username} - {self.schedule}"
 
 class Payment1(models.Model):
-    AGE_CHOICES = [
+    CATEGORY_CHOICES = [
         ('Взрослые', 'Взрослые'),
         ('Подростки', 'Подростки'),
         ('Дети', 'Дети')
@@ -68,9 +68,9 @@ class Payment1(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Пользователь"
     )
-    age = models.CharField(
+    category = models.CharField(
         max_length=20,
-        choices=AGE_CHOICES,
+        choices=CATEGORY_CHOICES,
         verbose_name="Возрастная группа"
     )
     sport = models.CharField(
