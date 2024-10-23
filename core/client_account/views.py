@@ -15,7 +15,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     serializer_class = AttendanceSerializer
 
 
-class PaymentListView(generics.ListCreateAPIView):
+class PaymentListCreateView(generics.ListCreateAPIView):
     queryset = Payment1.objects.all()
     serializer_class = Payment1Serializer
     permission_classes = [IsAuthenticated]
