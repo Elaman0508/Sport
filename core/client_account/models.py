@@ -94,7 +94,7 @@ class Schedul(models.Model):
         Payment1,
         related_name='Платежи',
         on_delete=models.CASCADE,
-        verbose_name=""
+        verbose_name="Платежи"
     )
     day_of_week = models.CharField(
         max_length=12,
@@ -123,7 +123,7 @@ class Schedul(models.Model):
         verbose_name_plural = "Расписания"
 
     def __str__(self):
-        return f'{self.get_category_display()} - {self.day_of_week}'
+        return f'{self.day_of_week}'
 
 
 class UserProfile(models.Model):
