@@ -17,10 +17,10 @@ class Hall(models.Model):
     ]
 
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
-    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
-    image1 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
-    image2 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
-    image3 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение', blank=True, null=True)
+    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
+    image1 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
+    image2 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
+    image3 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
 
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     description = models.TextField(verbose_name='Описание')
