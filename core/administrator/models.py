@@ -37,17 +37,17 @@ class Hall(models.Model):
     dressing_room = models.BooleanField(default=False, verbose_name='Раздевалка')  # Раздевалка
 
     def __str__(self):
-        return self.title
+        return f"{self.id} - {self.title}"
 
     class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
 
     def save(self, *args, **kwargs):
-        # Эгер pk бар болсо, эскини текшеребиз
+        # Проверка наличия предыдущих значений при обновлении
         if self.pk:
             old_hall = Hall.objects.get(pk=self.pk)
-            # Эгер жаңы сүрөт жүктөлбөсө, мурунку сүрөттү сактайбыз
+            # Сохраняем старые изображения, если новые не загружены
             if not self.image:
                 self.image = old_hall.image
             if not self.image1:
@@ -56,7 +56,7 @@ class Hall(models.Model):
                 self.image2 = old_hall.image2
             if not self.image3:
                 self.image3 = old_hall.image3
-            # Башка талааларды да текшерип сактап калууга болот
+            # Сохраняем старые значения других полей, если они не заданы
             if not self.title:
                 self.title = old_hall.title
             if not self.description:
@@ -111,8 +111,7 @@ class WorkSchedule(models.Model):
         verbose_name_plural = "Расписания"
 
     def __str__(self):
-        return f"{self.hall.title} - {self.day_of_week}: {self.opening_time} - {self.closing_time}"
-
+        return f"{self.hall.id} - {self.day_of_week}: {self.opening_time} - {self.closing_time}"
 
 #Кружки
 class Circle(models.Model):
