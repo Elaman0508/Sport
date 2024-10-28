@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
 
@@ -111,7 +111,16 @@ class WorkSchedule(models.Model):
         verbose_name_plural = "Расписания"
 
     def __str__(self):
-        return f"{self.hall.id} - {self.day_of_week}: {self.opening_time} - {self.closing_time}"
+        return f"{self.hall.title} - {self.day_of_week}: {self.opening_time} - {self.closing_time}"
+
+    def save(self, *args, **kwargs):
+        if WorkSchedule.objects.filter(
+            hall=self.hall,
+            day_of_week=self.day_of_week,
+            opening_time=self.opening_time
+        ).exists():
+            raise ValidationError("Такое расписание уже существует для этого зала на выбранный день и время.")
+        super().save(*args, **kwargs)
 
 #Кружки
 class Circle(models.Model):
