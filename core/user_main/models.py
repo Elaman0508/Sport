@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class SportClass(models.Model):
     SPORT_CHOICES = [
         ('Basketball', 'Basketball'),

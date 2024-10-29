@@ -261,7 +261,7 @@ class Trainer(models.Model):
     last_name = models.CharField(verbose_name='Фамилия', max_length=255)
     email = models.EmailField(verbose_name='Электронная почта')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
-    photo = models.ImageField(verbose_name='Фото', upload_to='trainers_photos/')
+    image = models.ImageField(upload_to='trainers_photos/',blank=True, null=True)
     sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
 
     def __str__(self):

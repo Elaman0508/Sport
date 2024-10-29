@@ -50,7 +50,7 @@ class SchedulAdmin(admin.ModelAdmin):
 admin.site.register(Schedul, SchedulAdmin)
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'phone', 'sport','photo')
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'sport','image')
     search_fields = ('first_name', 'last_name', 'email', 'phone')
     list_filter = ('sport',)
     ordering = ('last_name',)
