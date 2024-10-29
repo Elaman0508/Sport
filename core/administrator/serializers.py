@@ -121,7 +121,8 @@ class UserLoginSerializer(serializers.Serializer):
 class TrainerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trainer
-        fields = '__all__'
+        fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'image', 'sport']
+
 #Клиенты
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:

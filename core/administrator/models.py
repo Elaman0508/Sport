@@ -2,6 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
+from django.core.validators import RegexValidator
+
 
 class Hall(models.Model):
     SPORT_CHOICES = [
@@ -260,18 +262,26 @@ class Trainer(models.Model):
     first_name = models.CharField(verbose_name='Имя', max_length=255)
     last_name = models.CharField(verbose_name='Фамилия', max_length=255)
     email = models.EmailField(verbose_name='Электронная почта')
-    phone = models.CharField(verbose_name='Телефон', max_length=20)
-    image = models.ImageField(upload_to='trainers_photos/',blank=True, null=True)
+    phone = models.CharField(
+        verbose_name='Телефон',
+        max_length=20,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?1?\d{9,15}$',
+                message="Телефон должен быть введен в формате: '+999999999'. Допускается до 15 цифр."
+            ),
+        ]
+    )
+    image = models.ImageField(upload_to='trainers_photos/', blank=True, null=True)
     sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
-
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
 
     class Meta:
         verbose_name = 'Тренер'
         verbose_name_plural = 'Тренеры'
-        unique_together = ('email', 'sport')  # Уникальность комбинации email и спорт
+        ordering = ['last_name', 'first_name']
 
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 #Клиенты
 class Client(models.Model):
     PAYMENT_METHOD_CHOICES = [
