@@ -75,7 +75,7 @@ class Payment1(models.Model):
 
 
 class BankCard(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     cardholder_name = models.CharField(max_length=100, verbose_name="Имя владельца карты")
     card_number = models.CharField(max_length=16, verbose_name="Номер карты")
     expiry_date = models.CharField(max_length=5, verbose_name="Дата истечения срока действия (MM/YY)")
