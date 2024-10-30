@@ -56,12 +56,7 @@ class Payment1(models.Model):
         ('плавание', 'Плавание'),
         ('йога', 'Йога'),
     ]
-
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        verbose_name="Пользователь"
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     sport = models.CharField(verbose_name='Виды спорта', max_length=100, choices=SPORTS_CHOICES)
     paid = models.BooleanField(default=False, verbose_name="Оплачено")
     enrollment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата записи")
