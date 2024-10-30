@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status, viewsets
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.parsers import MultiPartParser, JSONParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -117,7 +117,10 @@ class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class AdvertisementListCreateView(generics.ListCreateAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    parser_classes = [MultiPartParser]  # Обработка файлов
+    parser_classes = [MultiPartParser]
+    permission_classes = [IsAuthenticated]
+
+    # Обработка файлов
     #
     # def perform_create(self, serializer):
     #     serializer.save()  # Сохраняем объявление, включая поле photo
