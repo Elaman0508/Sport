@@ -7,8 +7,8 @@ router.register(r'attendances', AttendanceViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('payments/', PaymentListCreateView.as_view(), name='payment-list-create'),
-    path('schedules/', SchedulListCreateView.as_view(), name='schedul-list-create'),
+    path('bank-cards/', BankCardListCreateView.as_view(), name='bank-card-list-create'),
+    path('payments/', Payment1ListView.as_view(), name='payment-list'),
     path('profiles/', UserProfileListCreateView.as_view(), name='profile-list-create'),
     path('profiles/<int:pk>/', UserProfileDetailView.as_view(), name='profile-detail'),
 ]

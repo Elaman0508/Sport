@@ -1,8 +1,10 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
+
 from .models import *
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 
 class ScheduleViewSet(viewsets.ModelViewSet):
@@ -15,14 +17,22 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     serializer_class = AttendanceSerializer
 
 
-class PaymentListCreateView(generics.ListCreateAPIView):
-    queryset = Payment1.objects.all()
+class BankCardListCreateView(generics.ListCreateAPIView):
+    serializer_class = BankCardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return BankCard.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class Payment1ListView(generics.ListAPIView):
     serializer_class = Payment1Serializer
-class SchedulListCreateView(generics.ListCreateAPIView):
-    queryset = Schedul.objects.all()
-    serializer_class = SchedulSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-
+    def get_queryset(self):
+        return Payment1.objects.filter(user=self.request.user)
 
 class UserProfileListCreateView(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()

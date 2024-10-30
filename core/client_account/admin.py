@@ -21,21 +21,23 @@ class ScheduleAdmin(admin.ModelAdmin):
 
     sport.short_description = 'Спорт'
 
-
+@admin.register(Payment1)
 class Payment1Admin(admin.ModelAdmin):
-    list_display = ('user', 'sport', 'paid', 'enrollment_date', 'is_active')
-    list_filter = ('sport', 'paid', 'is_active')
+    list_display = ('user', 'sport', 'monthly_price', 'paid', 'enrollment_date', 'payment_method')
+    list_filter = ('paid', 'sport', 'enrollment_date')
     search_fields = ('user__username', 'sport')
     ordering = ('-enrollment_date',)
 
-class SchedulAdmin(admin.ModelAdmin):
-    list_display = ('circle', 'day_of_week', 'category', 'start_time', 'end_time', 'is_active')
-    list_filter = ('day_of_week', 'category', 'is_active')
-    search_fields = ('circle__user__username', 'category')
-    ordering = ('day_of_week', 'start_time')
+@admin.register(BankCard)
+class BankCardAdmin(admin.ModelAdmin):
+    list_display = ('user', 'cardholder_name', 'card_number_display', 'expiry_date', 'added_date')
+    search_fields = ('user__username', 'cardholder_name')
+    readonly_fields = ('card_number_display',)
 
-# Регистрация моделей в админ-панели
-admin.site.register(Payment1, Payment1Admin)
-admin.site.register(Schedul, SchedulAdmin)
+    def card_number_display(self, obj):
+        # Показывает только последние 4 цифры для безопасности
+        return f"**** **** **** {obj.card_number[-4:]}"
+    card_number_display.short_description = 'Номер карты'
+
 
 # Регистрация модели Payment1 с администратором

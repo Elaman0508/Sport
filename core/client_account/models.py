@@ -62,68 +62,32 @@ class Payment1(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Пользователь"
     )
-    sport= models.CharField(verbose_name='Виды спорта', max_length=100, choices=SPORTS_CHOICES)
-    paid = models.BooleanField(
-        default=False,
-        verbose_name="Оплачено"
-    )
-    enrollment_date = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата записи"
-    )
-    opening_time = models.TimeField(verbose_name="Время открытия")
-    closing_time = models.TimeField(verbose_name="Время закрытия")
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="Активное расписание"
-    )
+    sport = models.CharField(verbose_name='Виды спорта', max_length=100, choices=SPORTS_CHOICES)
+    paid = models.BooleanField(default=False, verbose_name="Оплачено")
+    enrollment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата записи")
+    monthly_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за месяц")
+    payment_method = models.ForeignKey('BankCard', on_delete=models.SET_NULL, null=True, blank=True,
+                                       verbose_name="Способ оплаты")
 
     class Meta:
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
 
 
-class Schedul(models.Model):
-    CATEGORY_CHOICES = (
-        ('взрослые', 'Взрослые'),
-        ('подростки', 'Подростки'),
-        ('дети', 'Дети'),
-    )
-
-    circle = models.ForeignKey(
-        Payment1,
-        related_name='Платежи',
-        on_delete=models.CASCADE,
-        verbose_name="Платежи"
-    )
-    day_of_week = models.CharField(
-        max_length=12,
-        choices=[
-            ('понедельник', 'Понедельник'),
-            ('вторник', 'Вторник'),
-            ('среда', 'Среда'),
-            ('четверг', 'Четверг'),
-            ('пятница', 'Пятница'),
-            ('суббота', 'Суббота'),
-            ('воскресенье', 'Воскресенье'),
-        ],
-        verbose_name="День недели"
-    )
-    category = models.CharField(
-        max_length=10,
-        choices=CATEGORY_CHOICES,
-        verbose_name="Категория"
-    )
-    start_time = models.TimeField(verbose_name="Начало занятия")
-    end_time = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
-    is_active = models.BooleanField(default=True, verbose_name="Активное расписание")
+class BankCard(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь")
+    cardholder_name = models.CharField(max_length=100, verbose_name="Имя владельца карты")
+    card_number = models.CharField(max_length=16, verbose_name="Номер карты")
+    expiry_date = models.CharField(max_length=5, verbose_name="Дата истечения срока действия (MM/YY)")
+    cvc_code = models.CharField(max_length=3, verbose_name="CVC/CVV код")
+    added_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
 
     class Meta:
-        verbose_name = "Расписание"
-        verbose_name_plural = "Расписания"
+        verbose_name = "Банковская карта"
+        verbose_name_plural = "Банковские карты"
 
     def __str__(self):
-        return f'{self.day_of_week}'
+        return f"{self.cardholder_name} - {self.card_number[-4:]}"
 
 
 class UserProfile(models.Model):

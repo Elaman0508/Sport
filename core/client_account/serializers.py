@@ -13,18 +13,22 @@ class AttendanceSerializer(serializers.ModelSerializer):
         fields = '__all__'  # Specify fields explicitly
 
 
+class BankCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankCard
+        fields = ['id', 'cardholder_name', 'card_number', 'expiry_date', 'cvc_code']
+        extra_kwargs = {
+            'card_number': {'write_only': True},
+            'cvc_code': {'write_only': True}
+        }
+
+
 class Payment1Serializer(serializers.ModelSerializer):
-    sport_display = serializers.CharField(source='get_sport_display', read_only=True)
+    payment_method = BankCardSerializer(read_only=True)
 
     class Meta:
         model = Payment1
-        fields = ['id', 'user', 'sport', 'sport_display', 'paid', 'enrollment_date', 'opening_time', 'closing_time', 'is_active']
-
-class SchedulSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Schedul
-        fields = ['id', 'circle', 'day_of_week', 'category', 'start_time', 'end_time', 'is_active']
-
+        fields = ['id', 'sport', 'monthly_price', 'paid', 'payment_method']
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
