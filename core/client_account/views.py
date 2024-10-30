@@ -18,21 +18,12 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
 
 class BankCardListCreateView(generics.ListCreateAPIView):
+    queryset = BankCard.objects.all()
     serializer_class = BankCardSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return BankCard.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 class Payment1ListView(generics.ListAPIView):
     serializer_class = Payment1Serializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Payment1.objects.filter(user=self.request.user)
+    queryset = Payment1.objects.all()
 
 class UserProfileListCreateView(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
@@ -42,4 +33,3 @@ class UserProfileListCreateView(generics.ListCreateAPIView):
 class UserProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]

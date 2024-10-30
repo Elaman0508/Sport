@@ -15,14 +15,14 @@ class HallListCreateView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
-    # permission_classes = [IsAuthenticated]
+
 
 
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
-    # permission_classes = [IsAuthenticated]
+
 
 #WorkSchedule
 class WorkScheduleListCreateView(generics.ListCreateAPIView):
@@ -37,14 +37,14 @@ class CircleListCreateView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
     parser_classes = [MultiPartParser]
-    # permission_classes = [IsAuthenticated]
+
 
 
 class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
     parser_classes = [MultiPartParser]
-    # permission_classes = [IsAuthenticated]
+
 #Schedul
 class SchedulListCreateView(generics.ListCreateAPIView):
     queryset = Schedul.objects.all()
@@ -118,7 +118,7 @@ class AdvertisementListCreateView(generics.ListCreateAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
     parser_classes = [MultiPartParser]
-    permission_classes = [IsAuthenticated]
+
 
     # Обработка файлов
     #
