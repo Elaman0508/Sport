@@ -30,6 +30,7 @@ class Payment1Serializer(serializers.ModelSerializer):
         model = Payment1
         fields = ['id', 'sport', 'monthly_price', 'paid', 'payment_method']
 class UserProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ['full_name', 'phone', 'birth_date', 'gender', 'email', 'address']

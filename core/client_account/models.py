@@ -86,23 +86,15 @@ class BankCard(models.Model):
         return f"{self.cardholder_name} - {self.card_number[-4:]}"
 
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
+    full_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=255)
     birth_date = models.DateField()
     gender = models.CharField(max_length=10)
-    address = models.CharField(max_length=255)
+    email = models.EmailField()
+    address = models.TextField()
 
     def __str__(self):
         return self.full_name
-
-    def get_personal_info(self):
-        return {
-            "ФИО": self.full_name,
-            "Телефон": self.phone,
-            "Дата рождения": self.birth_date.strftime("%d.%m.%Y"),
-            "Пол": self.gender,
-            "Email": self.user.email,  # Получаем email из связанного объекта user
-            "Адрес": self.address,
-        }
