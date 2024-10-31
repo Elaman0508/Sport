@@ -88,13 +88,13 @@ class BankCard(models.Model):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField()
     gender = models.CharField(max_length=10)
-    email = models.EmailField()
+    email = models.EmailField(max_length=254)
     address = models.TextField()
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.full_name
