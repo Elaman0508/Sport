@@ -30,7 +30,11 @@ class Payment1Serializer(serializers.ModelSerializer):
         model = Payment1
         fields = ['id', 'sport', 'monthly_price', 'paid', 'payment_method']
 class UserProfileSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
     class Meta:
         model = UserProfile
-        fields = ['full_name', 'phone', 'birth_date', 'gender', 'email', 'address']
+        fields = ['full_name', 'phone', 'birth_date', 'gender', 'email', 'address', 'user']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        validated_data['user'] = request.user  # Установка текущего пользователя
+        return super().create(validated_data)

@@ -25,11 +25,16 @@ class Payment1ListView(generics.ListAPIView):
     serializer_class = Payment1Serializer
     queryset = Payment1.objects.all()
 
-# class UserProfileListCreateView(generics.ListCreateAPIView):
-#     queryset = UserProfile.objects.all()
-#     serializer_class = UserProfileSerializer
+class UserProfileListCreateView(generics.ListAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
 
 class UserProfileDetailView(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     # permission_classes = [IsAuthenticated]
+    #
+    # def get_object(self):
+    #     # Получаем объект UserProfile для текущего аутентифицированного пользователя
+    #     return self.get_queryset().get(user=self.request.user)
