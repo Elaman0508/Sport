@@ -96,3 +96,13 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.full_name
+
+    def get_personal_info(self):
+        return {
+            "ФИО": self.full_name,
+            "Телефон": self.phone,
+            "Дата рождения": self.birth_date.strftime("%d.%m.%Y"),
+            "Пол": self.gender,
+            "Email": self.user.email,  # Получаем email из связанного объекта user
+            "Адрес": self.address,
+        }
