@@ -9,6 +9,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('bank-cards/', BankCardListCreateView.as_view(), name='bank-card-list-create'),
     path('payments/', Payment1ListView.as_view(), name='payment-list'),
-    path('profiles/', UserProfileListCreateView.as_view(), name='profile-list-create'),
-    path('profiles/<int:pk>/', UserProfileDetailView.as_view(), name='profile-detail'),
+    path('profiles/<int:pk>/',  ProfileView.as_view(), name='profile-detail'),
 ]

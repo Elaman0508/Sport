@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
-
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
@@ -27,10 +26,10 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': (
-        'first_name', 'last_name', 'phone_number', 'birth_date', 'activation_code', 'activation_code_created_at',
-        'reset_code')}),  # Добавляем сюда 'activation_code_created_at'
+            'first_name', 'last_name', 'phone_number', 'birth_date', 'activation_code',
+            'activation_code_created_at', 'reset_code')}),  # Исправлено: закрывающая скобка правильно расположена
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Important dates', {'fields': ('last_login',)})  # Удаляем 'date_joined' из этого раздела
     )
 
     # Поля для добавления нового пользователя
@@ -47,5 +46,5 @@ class CustomUserAdmin(UserAdmin):
     # Сортировка
     ordering = ('email',)
 
-
+# Регистрация модели с кастомным админом
 admin.site.register(CustomUser, CustomUserAdmin)

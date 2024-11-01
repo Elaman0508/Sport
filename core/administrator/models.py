@@ -89,7 +89,14 @@ class Hall(models.Model):
         super().save(*args, **kwargs)
 
 class WorkSchedule(models.Model):
-    hall = models.ForeignKey(Hall, related_name='schedules', on_delete=models.CASCADE, verbose_name="Зал")
+    hall = models.ForeignKey(
+        Hall,
+        related_name='schedules',
+        on_delete=models.CASCADE,
+        verbose_name="Зал",
+        null=True,  # Поле может быть пустым в базе данных
+        blank=True  # Поле можно оставить пустым в формах
+    )
     day_of_week = models.CharField(
         max_length=12,
         choices=[
@@ -108,12 +115,12 @@ class WorkSchedule(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
 
     class Meta:
-        unique_together = ('hall', 'day_of_week', 'opening_time')
+        unique_together = ('day_of_week', 'opening_time')
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
 
     def __str__(self):
-        return f"{self.hall.title} - {self.day_of_week}: {self.opening_time} - {self.closing_time}"
+        return f" {self.day_of_week}: {self.opening_time} - {self.closing_time}"
 
     def save(self, *args, **kwargs):
         if WorkSchedule.objects.filter(
@@ -371,8 +378,6 @@ class Review(models.Model):
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
         ordering = ['-created_at']  # Сортировка по дате создания (последние отзывы первыми)
-    def __str__(self):
-        return f"{self.name}: {self.comment[:20]}"
 
 class Payment(models.Model):
     name = models.CharField(max_length=255, verbose_name="Имя")

@@ -87,14 +87,13 @@ class BankCard(models.Model):
 
 
 
-class UserProfile(models.Model):
-    full_name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=255)
-    birth_date = models.DateField()
-    gender = models.CharField(max_length=10)
-    email = models.EmailField(max_length=254)
-    address = models.TextField()
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.full_name
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    full_name = models.CharField(max_length=100)
+    birth_date = models.DateField()
+    phone = models.CharField(max_length=15)
+    gender = models.CharField(max_length=10, choices=[('Мужской', 'Мужской'), ('Женский', 'Женский')], verbose_name="Пол")
+    address = models.CharField(max_length=255, verbose_name="Адрес")
+    city = models.CharField(max_length=100, verbose_name="Город")
+
