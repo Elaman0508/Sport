@@ -31,10 +31,10 @@ class Hall(models.Model):
     shower = models.BooleanField(default=False, verbose_name='Душевая')
     lighting = models.BooleanField(default=False, verbose_name='Освещение')
     dressing_room = models.BooleanField(default=False, verbose_name='Раздевалка')
-    image = models.ImageField(upload_to='hall_images/',validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
-    image1 = models.ImageField(upload_to='hall_images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
-    image2 = models.ImageField(upload_to='hall_images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
-    image3 = models.ImageField(upload_to='hall_images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
+    image = models.ImageField(upload_to='hall_images/',blank=True, null=True)
+    image1 = models.ImageField(upload_to='hall_images/', blank=True, null=True)
+    image2 = models.ImageField(upload_to='hall_images/',blank=True, null=True)
+    image3 = models.ImageField(upload_to='hall_images/',blank=True, null=True)
 
     def __str__(self):
         return f"{self.id} - {self.title}"
