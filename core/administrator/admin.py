@@ -14,25 +14,25 @@ class WorkScheduleAdmin(admin.ModelAdmin):
 admin.site.register(WorkSchedule, WorkScheduleAdmin)
 
 # Настройка отображения модели Circle
+
 @admin.register(Circle)
 class CircleAdmin(admin.ModelAdmin):
     list_display = ('title', 'sports', 'phone', 'address')  # Поля, отображаемые в списке кружков
     search_fields = ('title', 'sports')  # Поля, по которым можно искать кружки
- # Отображение связанных изображений на странице кружка
+
+    # Отображение связанных изображений на странице кружка
     fieldsets = (
         (None, {
             'fields': ('title', 'image', 'sports', 'phone', 'address'),
         }),
         ('Описание секций', {
-            'fields': ('header1', 'description1', 'header2', 'description2', 'header3', 'description3', 'header4', 'description4'),
+            'fields': (
+            'header1', 'description1', 'header2', 'description2', 'header3', 'description3', 'header4', 'description4'),
             'classes': ('collapse',),  # Свернутый блок
         }),
     )
 
-class CircleImageAdmin(admin.ModelAdmin):
-    list_display = ('circle', 'image', 'description')  # Поля, отображаемые в списке изображений
-    search_fields = ('circle__title', 'description')
-
+@admin.register(Schedul)
 class SchedulAdmin(admin.ModelAdmin):
     list_display = ('category', 'day_of_week', 'start_time', 'end_time')
     search_fields = ('day_of_week',)
@@ -40,21 +40,20 @@ class SchedulAdmin(admin.ModelAdmin):
     ordering = ('day_of_week', 'start_time')
 
     def get_queryset(self, request):
-        # Переопределяем метод для отображения всех записей
+        """Переопределяем метод для отображения всех записей."""
         return super().get_queryset(request)
 
     def save_model(self, request, obj, form, change):
-        # Сохраняем объект и вызываем родительский метод
+        """Сохраняем объект и вызываем родительский метод."""
         super().save_model(request, obj, form, change)
 
-admin.site.register(Schedul, SchedulAdmin)
+
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'phone', 'sport','image')
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'sport', 'image')
     search_fields = ('first_name', 'last_name', 'email', 'phone')
     list_filter = ('sport',)
     ordering = ('last_name',)
-
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('name', 'trainer', 'sport', 'payment_method')  # Use existing field 'name'

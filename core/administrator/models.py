@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
 from django.core.validators import RegexValidator, FileExtensionValidator
+from django.template.base import filter_raw_string
 
 class Hall(models.Model):
     SPORT_CHOICES = [
@@ -16,7 +17,6 @@ class Hall(models.Model):
         ('Плавание', 'Плавание'),
         ('Йога', 'Йога'),
     ]
-
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     description = models.TextField(verbose_name='Описание')
@@ -35,7 +35,6 @@ class Hall(models.Model):
     image1 = models.ImageField(upload_to='hall_images/', blank=True, null=True)
     image2 = models.ImageField(upload_to='hall_images/',blank=True, null=True)
     image3 = models.ImageField(upload_to='hall_images/',blank=True, null=True)
-
     def __str__(self):
         return f"{self.id} - {self.title}"
     class Meta:
@@ -50,9 +49,7 @@ class Hall(models.Model):
             self.image1 = self.image1 or old_hall.image1
             self.image2 = self.image2 or old_hall.image2
             self.image3 = self.image3 or old_hall.image3
-
         super().save(*args, **kwargs)
-
 
 class WorkSchedule(models.Model):
     hall = models.ForeignKey(
@@ -79,13 +76,39 @@ class WorkSchedule(models.Model):
     opening_time = models.TimeField(verbose_name="Время открытия")
     closing_time = models.TimeField(verbose_name="Время закрытия")
     is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
-
     class Meta:
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+#Тренеры
+class Trainer(models.Model):
+    SPORT_CHOICES = [
+        ('Баскетбол', 'Баскетбол'),
+        ('Футбол', 'Футбол'),
+        ('Волейбол', 'Волейбол'),
+        ('Тенис', 'Тенис'),
+        ('Бокс', 'Бокс'),
+        ('Велоспорт', 'Велоспорт'),
+        ('Таэквондо', 'Таэквондо'),
+        ('Плавание', 'Плавание'),
+        ('Йога', 'Йога'),
+    ]
+    first_name = models.CharField(verbose_name='Имя', max_length=255)
+    last_name = models.CharField(verbose_name='Фамилия', max_length=255)
+    email = models.EmailField(verbose_name='Электронная почта')
+    phone = models.CharField(
+        verbose_name='Телефон',
+        max_length=20)
+    image = models.ImageField(upload_to='trainers_photos/', blank=True, null=True)
+    sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
+    class Meta:
+        verbose_name = 'Тренер'
+        verbose_name_plural = 'Тренеры'
+        ordering = ['last_name', 'first_name']
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 #Кружки
 class Circle(models.Model):
     SPORT_CHOICES = [
@@ -99,13 +122,13 @@ class Circle(models.Model):
         ('Плавание', 'Плавание'),
         ('Йога', 'Йога'),
     ]
-
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     image = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     image1 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     image2 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     image3 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, verbose_name='Тренер')
     header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     description1 = models.TextField(verbose_name='Описание 1', blank=True)
     phone = models.CharField(verbose_name='Телефон', max_length=20)
@@ -116,14 +139,11 @@ class Circle(models.Model):
     description3 = models.TextField(verbose_name='Описание 3', blank=True)
     header4 = models.CharField(verbose_name='Заголовок 4', max_length=255, blank=True)
     description4 = models.TextField(verbose_name='Описание 4', blank=True)
-
     def __str__(self):
         return self.title
-
     class Meta:
         verbose_name = 'Кружок'
         verbose_name_plural = 'Кружки'
-
     def save(self, *args, **kwargs):
         # Эгер pk бар болсо, эскини текшеребиз
         if self.pk:
@@ -162,19 +182,20 @@ class Circle(models.Model):
                     self.header4 = old_circle.header4
                 if not self.description4:
                     self.description4 = old_circle.description4
-
             except ObjectDoesNotExist:
                 # Эгер эски рекорд табылбаса, жаңадан түзүү
                 pass
-
         super().save(*args, **kwargs)
+
+
 class Schedul(models.Model):
     CATEGORY_CHOICES = (
         ('adults', 'Взрослые'),
         ('teens', 'Подростки'),
         ('kids', 'Дети'),
     )
-    сircle = models.ForeignKey(Circle, related_name='schedules', on_delete=models.CASCADE, verbose_name="кружки")
+
+    circle = models.ForeignKey(Circle, related_name='schedules', on_delete=models.CASCADE, verbose_name="Кружок")
     day_of_week = models.CharField(
         max_length=12,
         choices=[
@@ -191,59 +212,16 @@ class Schedul(models.Model):
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
     start_time = models.TimeField(verbose_name="Начало занятия")
     end_time = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
-    is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
-    category1 = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
-    day_of_week1 = models.CharField(max_length=15, verbose_name="День недели")
-    start_time1 = models.TimeField(verbose_name="Начало занятия")
-    end_time1 = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
-    is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
-    category2 = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
-    day_of_week2 = models.CharField(max_length=15, verbose_name="День недели")
-    start_time2 = models.TimeField(verbose_name="Начало занятия")
-    end_time2 = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
-    is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
+    is_active = models.BooleanField(default=True, verbose_name="Активное расписание")
+
     class Meta:
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
-    def __str__(self):
-        return f'{self.get_category_display()} - {self.day_of_week}'
-
-#Тренеры
-class Trainer(models.Model):
-    SPORT_CHOICES = [
-        ('Баскетбол', 'Баскетбол'),
-        ('Футбол', 'Футбол'),
-        ('Волейбол', 'Волейбол'),
-        ('Тенис', 'Тенис'),
-        ('Бокс', 'Бокс'),
-        ('Велоспорт', 'Велоспорт'),
-        ('Таэквондо', 'Таэквондо'),
-        ('Плавание', 'Плавание'),
-        ('Йога', 'Йога'),
-    ]
-    first_name = models.CharField(verbose_name='Имя', max_length=255)
-    last_name = models.CharField(verbose_name='Фамилия', max_length=255)
-    email = models.EmailField(verbose_name='Электронная почта')
-    phone = models.CharField(
-        verbose_name='Телефон',
-        max_length=20,
-        validators=[
-            RegexValidator(
-                regex=r'^\+?1?\d{9,15}$',
-                message="Телефон должен быть введен в формате: '+999999999'. Допускается до 15 цифр."
-            ),
-        ]
-    )
-    image = models.ImageField(upload_to='trainers_photos/', blank=True, null=True)
-    sport = models.CharField(verbose_name='Спорт', max_length=20, choices=SPORT_CHOICES)
-
-    class Meta:
-        verbose_name = 'Тренер'
-        verbose_name_plural = 'Тренеры'
-        ordering = ['last_name', 'first_name']
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f"{self.circle.title} - {self.day_of_week} ({self.start_time} - {self.end_time})"
+
+
 #Клиенты
 class Client(models.Model):
     PAYMENT_METHOD_CHOICES = [
@@ -284,14 +262,11 @@ class Advertisement(models.Model):
     site_name = models.CharField(max_length=255)
     site_link = models.URLField()
     installment_plan = models.CharField(max_length=255)
-
     class Meta:
         verbose_name = "реклама"
         verbose_name_plural = "реклама"
-
     def __str__(self):
         return self.title
-
     def save(self, *args, **kwargs):
         # Эгер pk бар болсо, эскини текшеребиз
         if self.pk:
@@ -321,8 +296,6 @@ class Advertisement(models.Model):
             if not self.installment_plan:
                 self.installment_plan = old_advertisement.installment_plan
         super().save(*args, **kwargs)
-
-
 #отзыв
 class Review(models.Model):
     name = models.CharField(max_length=255, verbose_name="Имя")

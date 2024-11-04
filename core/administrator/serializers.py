@@ -19,18 +19,34 @@ class WorkScheduleSerializer(serializers.ModelSerializer):
         model = WorkSchedule
         fields = '__all__'
 #Кружки
+class TrainerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trainer
+        fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'image', 'sport']
+
+    def validate(self, data):
+        if not data.get('first_name'):
+            raise serializers.ValidationError("First name is required.")
+        if not data.get('last_name'):
+            raise serializers.ValidationError("Last name is required.")
+        if not data.get('email'):
+            raise serializers.ValidationError("Email is required.")
+        # Добавьте дополнительные проверки по мере необходимости
+        return data
+
+
 class CircleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Circle
-        fields = '__all__'  # Же конкреттүү талааларды тандап алсаңыз болот
+        fields = '__all__'  # Или укажите конкретные поля
         ref_name = 'CircleSerializer'
 
     def create(self, validated_data):
-        # Circle моделинин жаңы экземплярын түзүү
+        """Создание нового экземпляра Circle."""
         return Circle.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        # Circle моделинин экземплярын жаңыртуу
+        """Обновление существующего экземпляра Circle."""
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
@@ -39,7 +55,9 @@ class CircleSerializer(serializers.ModelSerializer):
 class SchedulSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedul
-        fields = '__all__'
+        fields = '__all__'  # Или укажите конкретные поля
+        ref_name = 'SchedulSerializer'
+
 #login
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -51,24 +69,15 @@ class UserLoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
-
         user = authenticate(email=email, password=password)
         if user is None:
             raise serializers.ValidationError("Неверный логин или пароль.")
         return {'user': user}
-
-#Тренеры
-class TrainerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Trainer
-        fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'image', 'sport']
-
 #Клиенты
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['id', 'name', 'trainer', 'sport', 'payment_method']  # Include the fields you want to expose
-
     # Optional: Customize the representation to include the trainer's name
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -82,54 +91,42 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
         fields = '__all__'
-
     def update(self, instance, validated_data):
         # Эгер файл жаңы жүктөлбөсө, мурунку файлды сактап калуу
         file = validated_data.get('file', None)
         if not file and instance.file:
             validated_data['file'] = instance.file
-
         # Башка талааларды да текшерип, мурунку маалыматтарды сактап калуу
         title = validated_data.get('title', None)
         if not title:
             validated_data['title'] = instance.title
-
         title1 = validated_data.get('title1', None)
         if not title1:
             validated_data['title1'] = instance.title1
-
         title2 = validated_data.get('title2', None)
         if not title2:
             validated_data['title2'] = instance.title2
-
         title3 = validated_data.get('title3', None)
         if not title3:
             validated_data['title3'] = instance.title3
-
         description = validated_data.get('description', None)
         if not description:
             validated_data['description'] = instance.description
-
         phone = validated_data.get('phone', None)
         if not phone:
             validated_data['phone'] = instance.phone
-
         address = validated_data.get('address', None)
         if not address:
             validated_data['address'] = instance.address
-
         site_name = validated_data.get('site_name', None)
         if not site_name:
             validated_data['site_name'] = instance.site_name
-
         site_link = validated_data.get('site_link', None)
         if not site_link:
             validated_data['site_link'] = instance.site_link
-
         installment_plan = validated_data.get('installment_plan', None)
         if not installment_plan:
             validated_data['installment_plan'] = instance.installment_plan
-
         return super().update(instance, validated_data)
 
 class ReviewSerializer(serializers.ModelSerializer):

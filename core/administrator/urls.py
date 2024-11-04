@@ -4,7 +4,6 @@ from .views import *
 
 # Создаем роутер
 router = DefaultRouter()
-
 # Основные URL маршруты
 urlpatterns = [
     # зал
@@ -37,6 +36,5 @@ urlpatterns = [
     path('payments/', PaymentListCreateView.as_view(), name='payment-list-create'),
 
 ]
-
 # Добавляем маршруты роутера к urlpatterns
 urlpatterns += router.urls

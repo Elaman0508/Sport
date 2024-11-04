@@ -15,7 +15,6 @@ class HallListCreateView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
-
     def perform_create(self, serializer):
         try:
             serializer.save()
@@ -27,7 +26,6 @@ class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
-
     def perform_update(self, serializer):
         try:
             serializer.save()
@@ -49,18 +47,14 @@ class CircleListCreateView(generics.ListCreateAPIView):
     serializer_class = CircleSerializer
     parser_classes = [MultiPartParser]
 
-
-
 class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
     parser_classes = [MultiPartParser]
-
 #Schedul
 class SchedulListCreateView(generics.ListCreateAPIView):
     queryset = Schedul.objects.all()
     serializer_class = SchedulSerializer
-
     def create(self, request, *args, **kwargs):
         schedules_data = request.data  # Получаем данные из запроса
         serializer = SchedulSerializer(data=schedules_data, many=True)  # Указываем many=True для массового создания
@@ -71,13 +65,10 @@ class SchedulListCreateView(generics.ListCreateAPIView):
 class SchedulRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Schedul.objects.all()
     serializer_class = SchedulSerializer
-
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
-
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
-
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 #login
@@ -89,14 +80,11 @@ class UserLoginView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data.get('user')
-
         # Check if the user is an administrator
         if not user.is_staff and not user.is_superuser:
             raise PermissionDenied("Only administrators can log in.")
-
         # Token creation
         token, created = Token.objects.get_or_create(user=user)
-
         return Response({
             'response': True,
             'token': token.key
@@ -106,12 +94,10 @@ class TrainerCreateView(generics.ListCreateAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
     parser_classes = [MultiPartParser]
-    parser_classes = [JSONParser]
 # View for retrieving, updating, and deleting a specific Trainer
 class TrainerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
-    parser_classes = [JSONParser]
 #client
 # View for listing and creating Clients
 class ClientListCreateView(generics.ListCreateAPIView):
@@ -139,13 +125,10 @@ class AdvertisementListCreateView(generics.ListCreateAPIView):
 class AdvertisementRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-
 #Schedule
-
 class ReviewListCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-
 # Представление для получения, обновления и удаления одного отзыва
 class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
