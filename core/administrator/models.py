@@ -2,8 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
-from django.core.validators import RegexValidator
-
+from django.core.validators import RegexValidator, FileExtensionValidator
 
 class Hall(models.Model):
     SPORT_CHOICES = [
@@ -19,74 +18,41 @@ class Hall(models.Model):
     ]
 
     sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
-    image = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
-    image1 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
-    image2 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
-    image3 = models.ImageField(upload_to='hall_images/', verbose_name='Изображение')
-
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     description = models.TextField(verbose_name='Описание')
     phone = models.CharField(verbose_name='Телефон', max_length=20)
     address = models.CharField(verbose_name='Адрес', max_length=255)
-    size = models.CharField(verbose_name='Размеры', max_length=50)  # Размеры зала
-    inventory = models.TextField(verbose_name='Инвентарь')  # Описание инвентаря
-    price_per_hour = models.DecimalField(verbose_name='Оплата за час', max_digits=10, decimal_places=2)  # Цена за час
-    quantity = models.IntegerField(verbose_name='Количество')  # Количество мест
-    coverage = models.CharField(verbose_name='Покрытие', max_length=100)  # Покрытие
-    hall_type = models.CharField(verbose_name='Тип', max_length=100)  # Тип зала
-    shower = models.BooleanField(default=False, verbose_name='Душевая')  # Душевая
-    lighting = models.BooleanField(default=False, verbose_name='Освещение')  # Освещение
-    dressing_room = models.BooleanField(default=False, verbose_name='Раздевалка')  # Раздевалка
+    size = models.CharField(verbose_name='Размеры', max_length=50)
+    inventory = models.TextField(verbose_name='Инвентарь')
+    price_per_hour = models.DecimalField(verbose_name='Оплата за час', max_digits=10, decimal_places=2)
+    quantity = models.IntegerField(verbose_name='Количество')
+    coverage = models.CharField(verbose_name='Покрытие', max_length=100)
+    hall_type = models.CharField(verbose_name='Тип', max_length=100)
+    shower = models.BooleanField(default=False, verbose_name='Душевая')
+    lighting = models.BooleanField(default=False, verbose_name='Освещение')
+    dressing_room = models.BooleanField(default=False, verbose_name='Раздевалка')
+    image = models.ImageField(upload_to='hall_images/',validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
+    image1 = models.ImageField(upload_to='hall_images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
+    image2 = models.ImageField(upload_to='hall_images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
+    image3 = models.ImageField(upload_to='hall_images/', validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])
 
     def __str__(self):
         return f"{self.id} - {self.title}"
-
     class Meta:
         verbose_name = 'Зал'
         verbose_name_plural = 'Залы'
 
     def save(self, *args, **kwargs):
-        # Проверка наличия предыдущих значений при обновлении
-        if self.pk:
+        if self.pk:  # Эгер жазуу мурунтан болсо
             old_hall = Hall.objects.get(pk=self.pk)
-            # Сохраняем старые изображения, если новые не загружены
-            if not self.image:
-                self.image = old_hall.image
-            if not self.image1:
-                self.image1 = old_hall.image1
-            if not self.image2:
-                self.image2 = old_hall.image2
-            if not self.image3:
-                self.image3 = old_hall.image3
-            # Сохраняем старые значения других полей, если они не заданы
-            if not self.title:
-                self.title = old_hall.title
-            if not self.description:
-                self.description = old_hall.description
-            if not self.phone:
-                self.phone = old_hall.phone
-            if not self.address:
-                self.address = old_hall.address
-            if not self.size:
-                self.size = old_hall.size
-            if not self.inventory:
-                self.inventory = old_hall.inventory
-            if not self.price_per_hour:
-                self.price_per_hour = old_hall.price_per_hour
-            if not self.quantity:
-                self.quantity = old_hall.quantity
-            if not self.coverage:
-                self.coverage = old_hall.coverage
-            if not self.hall_type:
-                self.hall_type = old_hall.hall_type
-            if self.shower is None:
-                self.shower = old_hall.shower
-            if self.lighting is None:
-                self.lighting = old_hall.lighting
-            if self.dressing_room is None:
-                self.dressing_room = old_hall.dressing_room
+            # Эгер жаңы сүрөттөр жүктөлбөсө, эски сүрөттөрдү сактап калуу
+            self.image = self.image or old_hall.image
+            self.image1 = self.image1 or old_hall.image1
+            self.image2 = self.image2 or old_hall.image2
+            self.image3 = self.image3 or old_hall.image3
 
         super().save(*args, **kwargs)
+
 
 class WorkSchedule(models.Model):
     hall = models.ForeignKey(
@@ -115,22 +81,11 @@ class WorkSchedule(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Активное расписание (True)")
 
     class Meta:
-        unique_together = ('day_of_week', 'opening_time')
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
 
-    def __str__(self):
-        return f" {self.day_of_week}: {self.opening_time} - {self.closing_time}"
-
     def save(self, *args, **kwargs):
-        if WorkSchedule.objects.filter(
-            hall=self.hall,
-            day_of_week=self.day_of_week,
-            opening_time=self.opening_time
-        ).exists():
-            raise ValidationError("Такое расписание уже существует для этого зала на выбранный день и время.")
         super().save(*args, **kwargs)
-
 #Кружки
 class Circle(models.Model):
     SPORT_CHOICES = [

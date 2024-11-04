@@ -16,13 +16,24 @@ class HallListCreateView(generics.ListCreateAPIView):
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
 
-
+    def perform_create(self, serializer):
+        try:
+            serializer.save()
+        except Exception as e:
+            print(f"Ошибка при сохранении: {e}")
+            raise
 
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     parser_classes = [MultiPartParser]
 
+    def perform_update(self, serializer):
+        try:
+            serializer.save()
+        except Exception as e:
+            print(f"Ошибка при обновлении: {e}")
+            raise
 
 #WorkSchedule
 class WorkScheduleListCreateView(generics.ListCreateAPIView):

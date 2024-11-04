@@ -8,71 +8,11 @@ class HallSerializer(serializers.ModelSerializer):
         model = Hall
         fields = '__all__'
         ref_name = 'HallSerializer'
-
-    def create(self, validated_data):
-        hall = Hall.objects.create(**validated_data)
-        return hall
-
-    def update(self, instance, validated_data):
-        # Эгер файл жаңы жүктөлбөсө, мурунку файлды сактап калуу
-        file = validated_data.get('image', None)
-        if not file and instance.image:
-            validated_data['image'] = instance.image
-
-        # Башка талааларды да текшерип, мурунку маалыматтарды сактап калуу
-        title = validated_data.get('title', None)
-        if not title:
-            validated_data['title'] = instance.title
-
-        description = validated_data.get('description', None)
-        if not description:
-            validated_data['description'] = instance.description
-
-        phone = validated_data.get('phone', None)
-        if not phone:
-            validated_data['phone'] = instance.phone
-
-        address = validated_data.get('address', None)
-        if not address:
-            validated_data['address'] = instance.address
-
-        size = validated_data.get('size', None)
-        if not size:
-            validated_data['size'] = instance.size
-
-        inventory = validated_data.get('inventory', None)
-        if not inventory:
-            validated_data['inventory'] = instance.inventory
-
-        price_per_hour = validated_data.get('price_per_hour', None)
-        if price_per_hour is None:
-            validated_data['price_per_hour'] = instance.price_per_hour
-
-        quantity = validated_data.get('quantity', None)
-        if quantity is None:
-            validated_data['quantity'] = instance.quantity
-
-        coverage = validated_data.get('coverage', None)
-        if not coverage:
-            validated_data['coverage'] = instance.coverage
-
-        hall_type = validated_data.get('hall_type', None)
-        if not hall_type:
-            validated_data['hall_type'] = instance.hall_type
-
-        shower = validated_data.get('shower', None)
-        if shower is None:
-            validated_data['shower'] = instance.shower
-
-        lighting = validated_data.get('lighting', None)
-        if lighting is None:
-            validated_data['lighting'] = instance.lighting
-
-        dressing_room = validated_data.get('dressing_room', None)
-        if dressing_room is None:
-            validated_data['dressing_room'] = instance.dressing_room
-
-        return super().update(instance, validated_data)
+    def validate(self, attrs):
+        if 'image' not in attrs or attrs['image'] is None:
+            attrs['image'] = self.instance.image  # Эски сүрөттү колдонуу
+        # Ушул сыяктуу башка атрибуттарды текшерүү
+        return super().validate(attrs)
 
 class WorkScheduleSerializer(serializers.ModelSerializer):
     class Meta:
