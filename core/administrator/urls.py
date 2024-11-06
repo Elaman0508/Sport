@@ -25,7 +25,7 @@ urlpatterns = [
     path('clients/', ClientListCreateView.as_view(), name='client-list-create'),
     path('clients/<int:pk>/', ClientRetrieveUpdateDestroyView.as_view(), name='client-detail'),
     # URL для списка и создания объявлений
-    path('advertisements/', AdvertisementListCreateView.as_view(), name='advertisement-list-create'),
+    path('advertisements/', AdvertisementListView.as_view(), name='advertisement-list-create'),
     # URL для получения, обновления и удаления одного объявления
     path('advertisements/<int:pk>/', AdvertisementRetrieveUpdateDestroyView.as_view(), name='advertisement-detail'),
 

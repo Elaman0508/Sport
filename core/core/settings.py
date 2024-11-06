@@ -29,7 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
-
 INSTALLED_APPS = [
     # 'jazzmin',
     'django.contrib.admin',
@@ -40,15 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',  # Only one instance of django_filters
     'drf_yasg',
     'user',
     'administrator',
     'sport',
     'corsheaders',
-    'django_filters',
     'client_account',
     'user_main',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

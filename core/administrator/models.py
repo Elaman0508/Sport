@@ -106,9 +106,9 @@ class Trainer(models.Model):
     class Meta:
         verbose_name = 'Тренер'
         verbose_name_plural = 'Тренеры'
-        ordering = ['last_name', 'first_name']
+        ordering = ['email']
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.email}'
 #Кружки
 class Circle(models.Model):
     SPORT_CHOICES = [
@@ -122,12 +122,12 @@ class Circle(models.Model):
         ('Плавание', 'Плавание'),
         ('Йога', 'Йога'),
     ]
+    sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     image = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     image1 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     image2 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
     image3 = models.ImageField(upload_to='circle_images/',blank=True, null=True)
-    sports = models.CharField(verbose_name='Виды спорта', max_length=20, choices=SPORT_CHOICES)
     trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, verbose_name='Тренер')
     header1 = models.CharField(verbose_name='Заголовок 1', max_length=255, blank=True)
     description1 = models.TextField(verbose_name='Описание 1', blank=True)
@@ -302,6 +302,8 @@ class Review(models.Model):
     comment = models.TextField(verbose_name="Комментарий", blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     rating = models.PositiveIntegerField(verbose_name="Рейтинг", default=0)
+    hall = models.ForeignKey(Hall, on_delete=models.CASCADE, related_name="reviews", verbose_name="Зал")
+
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"

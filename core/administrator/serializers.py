@@ -6,7 +6,26 @@ from .models import *
 class HallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hall
-        fields = '__all__'
+        fields = ['id',
+            'sports',
+            'title',
+            'description',
+            'phone',
+            'address',
+            'size',
+            'inventory',
+            'price_per_hour',
+            'quantity',
+            'coverage',
+            'hall_type',
+            'shower',
+            'lighting',
+            'dressing_room',
+            'image',
+            'image1',
+            'image2',
+            'image3'
+        ]
         ref_name = 'HallSerializer'
     def validate(self, attrs):
         if 'image' not in attrs or attrs['image'] is None:
@@ -132,7 +151,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['id', 'name', 'comment', 'created_at', 'rating']
+        fields = ['id', 'hall','name', 'comment', 'created_at', 'rating']
         ref_name = 'SportReviewSerializer'  # Уникальное имя для Swagger
 
 class PaymentSerializer(serializers.ModelSerializer):

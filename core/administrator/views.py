@@ -1,6 +1,7 @@
 import stripe
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status, viewsets
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -10,17 +11,24 @@ from rest_framework.views import APIView
 from .models import *
 from rest_framework.exceptions import PermissionDenied
 from .serializers import *
+from .filters import *
 # hall
 class HallListCreateView(generics.ListCreateAPIView):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
-    parser_classes = [MultiPartParser]
+    parser_classes = [MultiPartParser]  # Для работы с изображениями
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = HallFilter
+
     def perform_create(self, serializer):
         try:
+            # Сохраняем объект
             serializer.save()
         except Exception as e:
+            # Логируем ошибку
             print(f"Ошибка при сохранении: {e}")
-            raise
+            raise e  # Повторно выбрасываем исключение, чтобы оно не прошло
+
 
 class HallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hall.objects.all()
@@ -46,6 +54,8 @@ class CircleListCreateView(generics.ListCreateAPIView):
     queryset = Circle.objects.all()
     serializer_class = CircleSerializer
     parser_classes = [MultiPartParser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CircleFilter
 
 class CircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Circle.objects.all()
@@ -94,6 +104,8 @@ class TrainerCreateView(generics.ListCreateAPIView):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
     parser_classes = [MultiPartParser]
+    filter_backends = (DjangoFilterBackend,)  # Применяем фильтрацию
+    filterset_class = TrainerFilter
 # View for retrieving, updating, and deleting a specific Trainer
 class TrainerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Trainer.objects.all()
@@ -104,6 +116,8 @@ class ClientListCreateView(generics.ListCreateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     parser_classes = [MultiPartParser]
+    filter_backends = (DjangoFilterBackend,)  # Применяем фильтрацию
+    filterset_class = ClientFilter
 
 # View for retrieving, updating, and deleting a specific Client
 class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -111,16 +125,20 @@ class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ClientSerializer
 
 #Advertisement
-class AdvertisementListCreateView(generics.ListCreateAPIView):
+class AdvertisementListView(generics.ListAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    parser_classes = [MultiPartParser]
+    filter_backends = (DjangoFilterBackend, SearchFilter)  # Для фильтрации
+    filterset_class = AdvertisementFilter  # Подключаем фильтр
+    search_fields = ['title', 'phone']  # Поля, по которым будет происходить поиск
 
-
-    # Обработка файлов
-    #
-    # def perform_create(self, serializer):
-    #     serializer.save()  # Сохраняем объявление, включая поле photo
+    def get_queryset(self):
+        """
+        Дополнительная логика для фильтрации (если необходимо).
+        """
+        queryset = super().get_queryset()
+        # Дополнительная логика для фильтрации, если нужно
+        return queryset
 
 class AdvertisementRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Advertisement.objects.all()
@@ -129,6 +147,8 @@ class AdvertisementRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVi
 class ReviewListCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    filter_backends = (DjangoFilterBackend,)  # Применяем фильтрацию
+    filterset_class = ReviewFilter
 # Представление для получения, обновления и удаления одного отзыва
 class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
@@ -138,3 +158,5 @@ class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class PaymentListCreateView(generics.ListAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+    filter_backends = (DjangoFilterBackend,)  # Применяем фильтрацию
+    filterset_class = PaymentFilter
