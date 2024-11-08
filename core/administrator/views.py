@@ -4,7 +4,7 @@ from rest_framework import generics, status, viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.parsers import MultiPartParser, JSONParser
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -125,7 +125,7 @@ class ClientRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ClientSerializer
 
 #Advertisement
-class AdvertisementListView(generics.ListAPIView):
+class AdvertisementListView(generics.ListCreateAPIView):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)  # Для фильтрации
@@ -144,14 +144,14 @@ class AdvertisementRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVi
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
 #Schedule
-class ReviewListCreateView(generics.ListCreateAPIView):
-    queryset = Review.objects.all()
+class ReviewhallListCreateView(generics.ListCreateAPIView):
+    queryset = Reviewhall.objects.all()
     serializer_class = ReviewSerializer
     filter_backends = (DjangoFilterBackend,)  # Применяем фильтрацию
-    filterset_class = ReviewFilter
+    filterset_class = ReviewhallFilter
 # Представление для получения, обновления и удаления одного отзыва
-class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Review.objects.all()
+class ReviewhallRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Reviewhall.objects.all()
     serializer_class = ReviewSerializer
 #платеж
 # Представление для списка и создания платежей
@@ -160,3 +160,16 @@ class PaymentListCreateView(generics.ListAPIView):
     serializer_class = PaymentSerializer
     filter_backends = (DjangoFilterBackend,)  # Применяем фильтрацию
     filterset_class = PaymentFilter
+
+class ReviewcircleListCreateView(generics.ListCreateAPIView):
+    queryset = Reviewcircle.objects.all()
+    serializer_class = ReviewcircleSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ReviewcircleFilter
+def perform_create(self, serializer):
+        """Сохранение нового отзыва с дополнительной логикой, если нужно."""
+        serializer.save()
+
+class ReviewcircleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Reviewcircle.objects.all()
+    serializer_class = ReviewcircleSerializer

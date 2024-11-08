@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import *
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -48,3 +48,17 @@ class CustomUserAdmin(UserAdmin):
 
 # Регистрация модели с кастомным админом
 admin.site.register(CustomUser, CustomUserAdmin)
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'full_name', 'phone', 'birth_date', 'gender', 'address')
+    search_fields = ('user__username', 'full_name', 'phone')
+    list_filter = ('gender',)
+    ordering = ('user',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'full_name', 'birth_date', 'phone', 'gender', 'address')
+        }),
+    )

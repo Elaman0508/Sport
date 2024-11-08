@@ -67,7 +67,7 @@ class AdvertisementAdmin(admin.ModelAdmin):
     list_display = ('title', 'phone', 'address', 'site_name')  # Отображаемые поля в админке
     search_fields = ('title', 'phone', 'address', 'site_name')  # Поля для поиска
 
-@admin.register(Review)
+@admin.register(Reviewhall)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_at', 'rating')
     search_fields = ('name', 'comment')
@@ -83,3 +83,14 @@ class PaymentAdmin(admin.ModelAdmin):
         return obj.created_at
 
     created_at.short_description = 'Дата создания'  # Настраиваем имя столбца
+@admin.register(Reviewcircle)
+class ReviewcircleAdmin(admin.ModelAdmin):
+    list_display = ('name', 'rating', 'circle', 'created_at')
+    list_filter = ('rating', 'circle')
+    search_fields = ('name', 'comment')
+    ordering = ['-created_at']
+    readonly_fields = ('created_at',)  # Поле только для чтения
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"

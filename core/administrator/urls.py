@@ -29,11 +29,14 @@ urlpatterns = [
     # URL для получения, обновления и удаления одного объявления
     path('advertisements/<int:pk>/', AdvertisementRetrieveUpdateDestroyView.as_view(), name='advertisement-detail'),
 
-    path('reviews/', ReviewListCreateView.as_view(), name='review-list-create'),
+    path('reviewshall/', ReviewhallListCreateView.as_view(), name='review-list-create'),
 
     # URL для получения, обновления и удаления одного отзыва
-    path('reviews/<int:pk>/', ReviewRetrieveUpdateDestroyView.as_view(), name='review-detail'),
+    path('reviewshall/<int:pk>/', ReviewhallRetrieveUpdateDestroyView.as_view(), name='review-detail'),
     path('payments/', PaymentListCreateView.as_view(), name='payment-list-create'),
+
+    path('reviewscircle/', ReviewcircleListCreateView.as_view(), name='review_list_create'),  # Список и создание отзывов
+    path('reviewscircle/<int:pk>/', ReviewcircleRetrieveUpdateDestroyView.as_view(), name='review_detail'),  # Просмотр, обновление и удаление отзыва
 
 ]
 # Добавляем маршруты роутера к urlpatterns

@@ -12,22 +12,14 @@ from django.db import IntegrityError
 from rest_framework import generics, status
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from datetime import timedelta
 from django.utils import timezone
-from .models import CustomUser
-from .serializers import (
-    UserRegistrationSerializer,
-    ActivationCodeSerializer,
-    UserLoginSerializer,
-    RegistrationMessageSerializer,
-    ResetPasswordVerifySerializer,
-    ResetPasswordSerializer,
-    ResendActivationCodeSerializer,
-)
+from .models import *
+from .serializers import *
 
 logger = logging.getLogger(__name__)
 
@@ -384,3 +376,7 @@ class ResenActivationCodeView(generics.GenericAPIView):
                 'response': False,
                 'message': _('Пользователь с этим адресом электронной почты не найден.')
             }, status=status.HTTP_404_NOT_FOUND)
+
+class ProfileRetrieveUpdateView(RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer

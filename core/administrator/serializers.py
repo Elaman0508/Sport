@@ -150,7 +150,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Review
+        model = Reviewhall
         fields = ['id', 'hall','name', 'comment', 'created_at', 'rating']
         ref_name = 'SportReviewSerializer'  # Уникальное имя для Swagger
 
@@ -159,3 +159,15 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ['id', 'name', 'sport', 'monthly_price', 'created_at']  # Убедитесь, что поле создано
         read_only_fields = ['created_at']
+class ReviewcircleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reviewcircle
+        fields = ['id', 'name', 'comment', 'created_at', 'rating', 'circle']
+        read_only_fields = ['id', 'created_at']  # Поля только для чтения
+
+    def validate_rating(self, value):
+        """Проверка, что рейтинг находится в пределах допустимого диапазона."""
+        if not (0 <= value <= 5):
+            raise serializers.ValidationError("Рейтинг должен быть от 0 до 5.")
+        return value
+

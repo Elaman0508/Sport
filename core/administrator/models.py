@@ -188,6 +188,7 @@ class Circle(models.Model):
         super().save(*args, **kwargs)
 
 
+
 class Schedul(models.Model):
     CATEGORY_CHOICES = (
         ('adults', 'Взрослые'),
@@ -195,20 +196,18 @@ class Schedul(models.Model):
         ('kids', 'Дети'),
     )
 
+    DAY_OF_WEEK_CHOICES = [
+        ('Понедельник', 'Понедельник'),
+        ('Вторник', 'Вторник'),
+        ('Среда', 'Среда'),
+        ('Четверг', 'Четверг'),
+        ('Пятница', 'Пятница'),
+        ('Суббота', 'Суббота'),
+        ('Воскресенье', 'Воскресенье'),
+    ]
+
     circle = models.ForeignKey(Circle, related_name='schedules', on_delete=models.CASCADE, verbose_name="Кружок")
-    day_of_week = models.CharField(
-        max_length=12,
-        choices=[
-            ('Понедельник', 'Понедельник'),
-            ('Вторник', 'Вторник'),
-            ('Среда', 'Среда'),
-            ('Четверг', 'Четверг'),
-            ('Пятница', 'Пятница'),
-            ('Суббота', 'Суббота'),
-            ('Воскресенье', 'Воскресенье'),
-        ],
-        verbose_name="День недели"
-    )
+    day_of_week = models.CharField(max_length=12, choices=DAY_OF_WEEK_CHOICES, verbose_name="День недели")
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, verbose_name="Категория")
     start_time = models.TimeField(verbose_name="Начало занятия")
     end_time = models.TimeField(verbose_name="Окончание занятия", null=True, blank=True)
@@ -221,7 +220,21 @@ class Schedul(models.Model):
     def __str__(self):
         return f"{self.circle.title} - {self.day_of_week} ({self.start_time} - {self.end_time})"
 
-
+    @classmethod
+    def get_schedules_as_list(cls):
+        """Функция для получения всех расписаний в виде списка словарей"""
+        schedules = cls.objects.all()
+        return [
+            {
+                'circle': schedule.circle.title,
+                'day_of_week': schedule.day_of_week,
+                'category': schedule.get_category_display(),
+                'start_time': schedule.start_time,
+                'end_time': schedule.end_time,
+                'is_active': schedule.is_active,
+            }
+            for schedule in schedules
+        ]
 #Клиенты
 class Client(models.Model):
     PAYMENT_METHOD_CHOICES = [
@@ -297,7 +310,7 @@ class Advertisement(models.Model):
                 self.installment_plan = old_advertisement.installment_plan
         super().save(*args, **kwargs)
 #отзыв
-class Review(models.Model):
+class Reviewhall(models.Model):
     name = models.CharField(max_length=255, verbose_name="Имя")
     comment = models.TextField(verbose_name="Комментарий", blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
@@ -307,8 +320,28 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
-        ordering = ['-created_at']  # Сортировка по дате создания (последние отзывы первыми)
+        ordering = ['-created_at']
 
+
+class Reviewcircle(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Имя")
+    comment = models.TextField(verbose_name="Комментарий", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    rating = models.PositiveIntegerField(verbose_name="Рейтинг", default=0)
+    circle = models.ForeignKey(
+        'Circle',
+        related_name='reviews',  # Измененное related_name
+        on_delete=models.CASCADE,
+        verbose_name="Кружок"
+    )
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.rating}"
 class Payment(models.Model):
     name = models.CharField(max_length=255, verbose_name="Имя")
     sport = models.CharField(max_length=50, verbose_name="Спорт")

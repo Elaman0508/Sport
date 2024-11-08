@@ -47,12 +47,12 @@ class ClientFilter(django_filters.FilterSet):
         model = Client  # Указываем модель клиента
         fields = ['name', 'trainer', 'sports', 'payment_method']  # Перечисляем поля для фильтрации
 
-class ReviewFilter(django_filters.FilterSet):
+class ReviewhallFilter(django_filters.FilterSet):
     hall = django_filters.ModelChoiceFilter(queryset=Hall.objects.all(), label='Зал')
     name = django_filters.CharFilter(lookup_expr='icontains', label="Имя")
 
     class Meta:
-        model = Review
+        model = Reviewhall
         fields = ['hall', 'name']
 class PaymentFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_expr='icontains', label="Имя")
@@ -61,3 +61,10 @@ class PaymentFilter(django_filters.FilterSet):
     class Meta:
         model = Payment  # Укажите модель, по которой нужно фильтровать
         fields = ['name', 'sport']
+class ReviewcircleFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(field_name='name', lookup_expr='icontains', label="Имя")
+    circle = django_filters.ModelChoiceFilter(queryset=Circle.objects.all(), label="Кружок")  # Фильтр по кружку
+
+    class Meta:
+        model = Reviewcircle
+        fields = ['name', 'circle']

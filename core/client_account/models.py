@@ -85,28 +85,3 @@ class BankCard(models.Model):
     def __str__(self):
         return f"{self.cardholder_name} - {self.card_number[-4:]}"
 
-
-
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="profile"
-    )
-    full_name = models.CharField(max_length=100)
-    birth_date = models.DateField()
-    phone = models.CharField(max_length=15)
-    gender = models.CharField(
-        max_length=10,
-        choices=[('Мужской', 'Мужской'), ('Женский', 'Женский')],
-        verbose_name="Пол"
-    )
-    address = models.CharField(max_length=255, verbose_name="Адрес")
-    city = models.CharField(max_length=100, verbose_name="Город")
-
-    class Meta:
-        ordering = ['user']  # Убедитесь, что это правильно вложено в класс Meta
-
-    def __str__(self):
-        return f'{self.user}'

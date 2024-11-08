@@ -28,3 +28,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+class Profile(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Мужской'),
+        ('F', 'Женский')
+    ]
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    full_name = models.CharField("ФИО", max_length=100, blank=True, null=True)
+    birth_date = models.DateField("Дата рождения", blank=True, null=True)
+    phone = models.CharField("Телефон", max_length=20, blank=True, null=True)
+    gender = models.CharField("Пол", max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
+    address = models.CharField("Адрес", max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"Профиль пользователя {self.user}"

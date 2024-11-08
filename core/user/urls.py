@@ -9,4 +9,6 @@ urlpatterns = [
     path('reset-password-verify/', ResetPasswordVerifyView.as_view(), name='reset_password_verify'),
     path('resend-activation-code/', ResendActivationCodeView.as_view(), name='resend_activation_code'),
     path('resen-password-verify-code/', ResenActivationCodeView.as_view(), name='resend_activation_code'),
+    path('profile/<int:pk>/', ProfileRetrieveUpdateView.as_view(), name='profile-detail'),
+
 ]
